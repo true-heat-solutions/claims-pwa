@@ -1,0 +1,41 @@
+:root {
+	--default-color: #343434;
+	--primary-color: #fafafa;
+	--accent-color: #528ff9;
+	--contrast-color: #4c4c4c;
+	--alt-color: #fefefe;
+	--main-font: "Roboto";
+	--line-height: 1.3;
+	--default-cursor: auto;
+	--link-color: inherit;
+
+	--desktop-rem: 1.3vmax;
+	--tablet-rem: 1.6vmax;
+	--mobile-rem: 20px;
+
+	--button-background: var(--accent-color);
+	--button-color: var(--alt-color);
+	--button-border: none;
+	--button-border-radius: 0.15rem;
+	--button-padding: 0.4rem;
+
+	--button-active-background: #1048a1;
+	--button-active-color: var(--button-color);
+	--button-active-border: var(--button-border);
+
+	--button-disabled-background: #787878;
+	--button-disabled-color: #4e4e4e;
+	--button-disabled-border: var(--button-border);
+
+	--button-accept-background: #1FA214;
+	--button-accept-active-background: #157a0c;
+
+	--button-reject-background: #B31414;
+	--button-reject-active-background: #7a0c0c;
+
+	--dialog-border: none;
+
+	--nav-height: 2.7rem;
+	--header-height: 0;
+	--footer-height: auto;
+}

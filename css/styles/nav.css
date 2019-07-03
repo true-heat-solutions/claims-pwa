@@ -1,0 +1,6 @@
+#nav {
+	grid-area: nav;
+	padding: 0.6em;
+	font-size: 1.2em;
+	justify-content: space-around;
+}
