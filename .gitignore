@@ -1,5 +1,5 @@
 *.sql
-# /img/icons.svg
+/img/icons.svg
 *.min.*
 *.map
 ~*

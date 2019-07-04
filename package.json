@@ -1,5 +1,5 @@
 {
-  "name": "template-basic",
+  "name": "true-heat",
   "version": "1.0.0",
   "private": true,
   "description": "A fairly bare-bones template repository",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shgysk8zer0/template-basic.git"
+    "url": "git+https://github.com/shgysk8zer0/true-heat.git"
   },
   "keywords": [
     "static",
@@ -32,9 +32,9 @@
   "author": "Chris Zuber <shgysk8zer0@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shgysk8zer0/template-basic/issues"
+    "url": "https://github.com/shgysk8zer0/true-heat/issues"
   },
-  "homepage": "https://github.com/shgysk8zer0/template-basic",
+  "homepage": "https://github.com/shgysk8zer0/true-heat",
   "scripts": {
     "preinstall": "git submodule update --recursive --init",
     "start": "http-server ${npm_package_config_serve_path} -p ${npm_package_config_serve_port} -a ${npm_package_config_serve_domain} -o",
