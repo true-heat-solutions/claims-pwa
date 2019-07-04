@@ -51,7 +51,7 @@ input[hidden]:checked + label[for].btn-toggle .when-unchecked {
 	width: calc(100% - 1.1em);
 }
 
-.input-group .input::placeholder {
+::placeholder {
 	color: #e7e7e7;
 }
 
