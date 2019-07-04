@@ -37,15 +37,43 @@ input[hidden]:checked + label[for].btn-toggle .when-unchecked {
 	border-radius: 13rem;
 }
 
-svg.shaded {
+.input-group {
+	padding: 0.2em;
+	margin: 4px;
+	border: 1px solid #efefef;
+	border-radius: 6px;
+	text-align: initial;
+}
+
+.input-group .input {
+	border: none;
+	font-size: 1.2em;
+	width: calc(100% - 1.1em);
+}
+
+.input-group .input::placeholder {
+	color: #e7e7e7;
+}
+
+.input-group > label {
+	color: var(--accent-color);
+}
+
+.shaded {
 	background-color: #e8e8e8;
-	color: red !important;
-	fill: #8d9ba6 !important;
-	padding: 5em;
+	color: #909ba0;
+	padding: 64px;
+	width: 165px;
+	height: 165px;
+	font-size: 2.5rem;
 }
 
-svg.shaded * {
-	color: inherit;
-	fill: currentColor;
+form {
+	height: 100vh;
+	padding: 0.6rem;
+	max-width: 450px;
 }
 
+form > * {
+	margin: 0.5em;
+}
