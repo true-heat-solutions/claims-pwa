@@ -1,6 +1,6 @@
 @charset "UTF-8";
 @import url("./vars.css");
-@import url("/css/normalize.css/normalize.css");
+@import url("/css/normalize/normalize.css");
 @import url("/css/core-css/rem.css");
 @import url("/css/core-css/viewport.css");
 @import url("/css/core-css/element.css");

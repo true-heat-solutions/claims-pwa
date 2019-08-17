@@ -16,7 +16,6 @@ customElements.define('form-json', class HTMLFormJSONELement extends HTMLFormEle
 				});
 
 				if (resp.ok) {
-					console.log({resp});
 					const body = await resp.json();
 					this.dispatchEvent(new CustomEvent('success', {detail: {
 						url: new URL(resp.url),
@@ -29,7 +28,10 @@ customElements.define('form-json', class HTMLFormJSONELement extends HTMLFormEle
 						body: body,
 					}}));
 				} else {
-					throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+					const detail = await resp.json();
+					if (detail.hasOwnProperty('error')) {
+						this.dispatchEvent(new CustomEvent('fail', {detail}));
+					}
 				}
 			} catch(err) {
 				console.error(err);

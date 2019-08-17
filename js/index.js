@@ -5,7 +5,9 @@ import './current-year.js';
 import './gravatar-img.js';
 import './imgur-img.js';
 import '/components/form-json.js';
-import {$, ready, registerServiceWorker} from '/js/std-js/functions.js';
+import '/components/error-message.js';
+import HTMLGravatarImageElement from './gravatar-img.js';
+import {$, ready, registerServiceWorker, notify} from '/js/std-js/functions.js';
 
 if (document.documentElement.dataset.hasOwnProperty('serviceWorker')) {
 	registerServiceWorker(document.documentElement.dataset.serviceWorker).catch(console.error);
@@ -59,6 +61,27 @@ ready().then(async () => {
 	});
 
 	const login = await importHTML('/components/login/login.html');
-	document.body.append(login);
-	document.forms.login.addEventListener('success', console.info);
+	document.getElementById('app').append(login);
+
+	document.forms.login.addEventListener('fail', async ({target, detail}) => {
+		target.querySelector('error-message').message = detail.error.message;
+	});
+
+	document.forms.login.addEventListener('success', ({target, detail}) => {
+		console.info(detail);
+		target.querySelector('error-message').clear();
+		localStorage.setItem('token', detail.body.token);
+		localStorage.setItem('givenName', detail.body.person.givenName);
+		localStorage.setItem('additionalName', detail.body.person.additionalName);
+		localStorage.setItem('familyName', detail.body.person.familyName);
+		localStorage.setItem('email', detail.body.person.email);
+
+		notify(`Welcome back, ${detail.body.person.honorificPrefix} ${detail.body.person.familyName}`, {
+			body: 'We missed you!',
+			icon: HTMLGravatarImageElement.url({
+				email: detail.body.person.email,
+				size: 64,
+			}),
+		});
+	});
 });

@@ -13,3 +13,6 @@
 [submodule "css/core-css"]
 	path = css/core-css
 	url = https://github.com/shgysk8zer0/core-css.git
+[submodule "css/animate.css"]
+	path = css/animate.css
+	url = https://github.com/daneden/animate.css.git
