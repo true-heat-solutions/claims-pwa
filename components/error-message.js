@@ -26,7 +26,11 @@ customElements.define('error-message', class ErrorMessageElement extends HTMLEle
 
 	set message(message) {
 		this.clear();
-		this.addError(message);
+		if (typeof message === 'string' && message !== '') {
+			this.addError(message);
+		} else if (Array.isArray(message)) {
+			this.addError(...message);
+		}
 	}
 
 	addError(...messages) {
