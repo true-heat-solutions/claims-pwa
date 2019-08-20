@@ -7,7 +7,7 @@ import './imgur-img.js';
 import '/components/form-json.js';
 import '/components/error-message.js';
 import '/components/toast-message.js';
-import './router.js';
+import './routes.js';
 import {$, ready, registerServiceWorker} from '/js/std-js/functions.js';
 
 if (document.documentElement.dataset.hasOwnProperty('serviceWorker')) {
