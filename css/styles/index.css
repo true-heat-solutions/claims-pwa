@@ -10,13 +10,3 @@
 @import url("/css/core-css/animations.css");
 @import url("./layout.css");
 @import url("./common.css");
-
-form {
-	height: 100vh;
-	padding: 0.6rem;
-	max-width: 450px;
-}
-
-form > * {
-	margin: 0.5em;
-}
