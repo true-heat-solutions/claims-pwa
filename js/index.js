@@ -4,9 +4,14 @@ import './share-button.js';
 import './current-year.js';
 import './gravatar-img.js';
 import './imgur-img.js';
-import '/components/form-json.js';
+import '/components/pages/login.js';
 import '/components/error-message.js';
 import '/components/toast-message.js';
+import '/components/pages/claims.js';
+import '/components/pages/account.js';
+import '/components/pages/forgot-password.js';
+import '/components/app-footer.js';
+import '/components/logout-button.js';
 import './routes.js';
 import {$, ready, registerServiceWorker} from '/js/std-js/functions.js';
 

@@ -4,14 +4,14 @@ export default class Router {
 	constructor(routes = {}) {
 		Object.entries(routes).forEach(([path, callback]) => {
 			try {
-				this.setRoute(path, callback);
+				Router.setRoute(path, callback);
 			} catch(err) {
 				console.error(err);
 			}
 		});
 	}
 
-	setRoute(path, callback) {
+	static setRoute(path, callback) {
 		if (typeof path === 'string' && callback instanceof Function) {
 			ROUTES.set(path, callback);
 		} else {
@@ -31,6 +31,11 @@ export default class Router {
 	async go(path, ...args) {
 		try {
 			const route = this.getRoute(path);
+			const hash = `#${[path, ...args].join('/')}`;
+
+			if (location.hash !== hash) {
+				location.hash = hash;
+			}
 
 			if (route instanceof Function) {
 				return await route.call(this, ...args);

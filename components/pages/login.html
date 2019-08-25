@@ -2,6 +2,19 @@
 <html lang="en" dir="ltr">
 	<head>
 		<meta charset="utf-8" />
+		<style>
+			@import url("/css/core-css/element.css");
+			@import url("/css/core-css/class-rules.css");
+			@import url("/css/styles/common.css");
+
+			:host {
+				display: block;
+			}
+
+			header {
+				justify-content: space-evenly;
+			}
+		</style>
 	</head>
 	<body>
 		<form name="login" class="relative center" action="https://api.kernvalley.us/login/" is="form-json" method="POST">

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			@import url("/css/core-css/element.css");
+			@import url("/css/core-css/class-rules.css");
+			@import url("/css/styles/common.css");
+
+			:host {
+				display: block;
+			}
+
+			header {
+				justify-content: space-evenly;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="flex row">
+			<button type="button" is="claim-filter-button" filter="open" active="">Open</button>
+			<button type="button" is="claim-filter-button" filter="in-progress">In Progress</button>
+			<button type="button" is="claim-filter-button" filter="closed">Closed</button>
+		</header>
+		<main></main>
+		<app-footer></app-footer>
+	</body>
+</html>
