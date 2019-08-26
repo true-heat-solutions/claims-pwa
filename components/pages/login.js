@@ -12,9 +12,7 @@ class LoginPage extends HTMLElement {
 			const html = await resp.text();
 			const doc = parser.parseFromString(html, 'text/html');
 			const frag = document.createDocumentFragment();
-
-			frag.append(...doc.head.children, ...doc.body.children);
-			const form = frag.querySelector('form');
+			const form = doc.forms.login;
 			form.addEventListener('submit', async event => {
 				event.preventDefault();
 
@@ -75,6 +73,7 @@ class LoginPage extends HTMLElement {
 				location.hash = '#claims';
 			});
 
+			frag.append(...doc.head.children, ...doc.body.children);
 			this.shadowRoot.append(frag);
 			this.dispatchEvent(new Event('ready'));
 		});
@@ -107,7 +106,7 @@ customElements.define('login-page', LoginPage);
 
 Router.setRoute('login', async (...args) => {
 	const el = new LoginPage(...args);
-	const app = document.getElementById('app');
+	const app = document.body;
 	[...app.children].forEach(el => el.remove());
 	app.append(el);
 });

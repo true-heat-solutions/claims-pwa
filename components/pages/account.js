@@ -20,7 +20,7 @@ customElements.define('account-page', AccountPage);
 
 Router.setRoute('account', async (...args) => {
 	const el = new AccountPage(...args);
-	const app = document.getElementById('app');
+	const app = document.body;
 	[...app.children].forEach(el => el.remove());
 	app.append(el);
 });

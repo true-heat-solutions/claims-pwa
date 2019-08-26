@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			@import url("/css/core-css/element.css");
+			@import url("/css/core-css/class-rules.css");
+			@import url("/css/styles/common.css");
+
+			:host {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<slot name="customer">Unknonw Customer</slot>
+		<slot name="date">Invalid Date</slot>
+		<slot name="status">Indeterminate</slot>
+		<svg id="edit-btn" class="current-color icon cursor-pointer" viewBox="0 0 8 16">
+			<path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/>
+		</svg>
+		<hr />
+	</body>
+</html>

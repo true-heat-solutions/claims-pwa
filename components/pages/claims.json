@@ -1,0 +1,11 @@
+[{
+  "uuid": "43d3b084-07c9-466c-b757-59b991d9957e",
+  "customer": "Customer Name",
+  "status": "open",
+  "opened": "2019-08-26"
+}, {
+  "uuid": "6aef5aad-5006-43c6-99c4-478f8afe4cb0",
+  "customer": "Customer Name",
+  "status": "closed",
+  "opened": "2019-08-26"
+}]
