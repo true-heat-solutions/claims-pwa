@@ -1,10 +1,10 @@
 import 'https://unpkg.com/@webcomponents/custom-elements@1.2.4/custom-elements.min.js';
 import '/js/std-js/deprefixer.js';
 import '/js/std-js/shims.js';
-import './share-button.js';
+// import './share-button.js';
 import './current-year.js';
-import './gravatar-img.js';
-import './imgur-img.js';
+// import './gravatar-img.js';
+// import './imgur-img.js';
 import '/components/pages/login.js';
 import '/components/error-message.js';
 import '/components/toast-message.js';
@@ -15,6 +15,7 @@ import '/components/pages/register.js';
 import '/components/pages/profile.js';
 import '/components/app-footer.js';
 import '/components/logout-button.js';
+import '/components/logo-img.js';
 import './routes.js';
 import {$, ready, registerServiceWorker} from '/js/std-js/functions.js';
 

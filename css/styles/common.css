@@ -1,3 +1,9 @@
+:host {
+	box-sizing: border-box;
+	overflow-x: hidden;
+	position: relative;
+}
+
 input[hidden] + label[for].btn-toggle {
 	background-color: var(--button-disabled-background);
 	margin: 0.3rem;
@@ -17,7 +23,7 @@ input[hidden]:checked + label[for].btn-toggle .when-unchecked {
 }
 
 .btn.btn-wide {
-	width: 100%;
+	width: 80%;
 	text-align: center;
 }
 
@@ -27,7 +33,7 @@ input[hidden]:checked + label[for].btn-toggle .when-unchecked {
 
 .input-group {
 	padding: 0.2em;
-	margin: 4px;
+	margin: 0.3rem 1.2rem;
 	border: 1px solid #efefef;
 	border-radius: 6px;
 	text-align: initial;
@@ -53,6 +59,11 @@ input[hidden]:checked + label[for].btn-toggle .when-unchecked {
 
 .zipcode {
 	width: 8ch;
+}
+
+.container {
+	margin: 0 1.6rem;
+	padding: 1.2rem 0.1rem;
 }
 
 .shaded {

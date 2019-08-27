@@ -17,7 +17,7 @@
 	--button-color: var(--alt-color);
 	--button-border: none;
 	--button-border-radius: 0.15rem;
-	--button-padding: 0.4rem;
+	--button-padding: 0.8rem 0.4rem;
 
 	--button-active-background: #1048a1;
 	--button-active-color: var(--button-color);

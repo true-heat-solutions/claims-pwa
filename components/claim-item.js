@@ -70,11 +70,11 @@ customElements.define('claim-item', class ClaimItemElement extends HTMLElement {
 	}
 
 	view() {
-		location.hash = `#claims/${this.uuid}`;
+		location.hash = `#claim/${this.uuid}`;
 	}
 
 	edit() {
-		location.hash = `#claims/${this.uuid}/edit`;
+		location.hash = `#claim/${this.uuid}/edit`;
 	}
 });
 
