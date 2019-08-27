@@ -16,21 +16,11 @@ class ClaimsPage extends HTMLElement {
 			const btns = frag.querySelectorAll('[data-filter-status]');
 
 			btns.forEach(btn => {
-				if (btn.dataset.filterStatus === '*') {
-					btn.addEventListener('click', event => {
-						const btn = event.target.closest('[data-filter-status]');
-						btns.forEach(button => button.disabled = button === btn);
-						this.claims.forEach(claim => claim.hidden = false);
-					});
-				} else {
-					btn.addEventListener('click', event => {
-						const claims = this.claims;
-						const btn = event.target.closest('[data-filter-status]');
-						btns.forEach(button => button.disabled = button === btn);
-						const status = btn.dataset.filterStatus;
-						claims.forEach(claim => claim.hidden = claim.status !== status);
-					});
-				}
+				btn.addEventListener('click', ({target}) => {
+					const btn = target.closest('[data-filter-status]');
+					btns.forEach(button => button.disabled = button === btn);
+					this.shadowRoot.querySelector('main').dataset.filter = btn.dataset.filterStatus;
+				});
 			});
 
 			let items = await ClaimsPage.items;

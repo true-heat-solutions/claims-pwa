@@ -11,12 +11,18 @@
 				display: block;
 			}
 
+			h3 {
+				margin: 0;
+			}
+
 			.flex.filters > * {
 				flex: 1 1 auto;
 			}
 
 			header {
+				padding-top: 0.3rem;
 				justify-content: space-evenly;
+				margin-bottom: 2rem;
 			}
 
 			.btn.round {
@@ -34,32 +40,53 @@
 				background: none;
 				color: inherit;
 				box-shadow: none;
-				border-bottom: 3px solid #DED884;
+				border-bottom: 3px solid #fefda3;
 				border-radius: none;
 			}
 
 			#create-btn {
-				bottom: 0.6rem;
-				right: 0.6rem;
-				padding: 0.4rem;
+				bottom: 1rem;
+				right: 1rem;
+				border-radius: 50%;
+				padding: 0.8rem;
+				font-size: 1.5rem;
+			}
+
+			::slotted([slot="claim"]) {
+				display: none;
+			}
+
+			main[data-filter="open"] ::slotted([slot="claim"][data-status="open"]) {
+				display: block;
+			}
+
+			main[data-filter="closed"] ::slotted([slot="claim"][data-status="closed"]) {
+				display: block;
+			}
+
+			main[data-filter="progress"] ::slotted([slot="claim"][data-status="progress"]) {
+				display: block;
 			}
 		</style>
 	</head>
 	<body>
 		<header class="clearfix background-accent color-alt">
+			<h3 class="center">
+				<slot name="pageName">Claims</slot>
+			</h3>
 			<div class="flex row filters">
-				<button type="button" data-filter-status="*" disabled="">All</button>
-				<button type="button" data-filter-status="open">Open</button>
+				<!-- <button type="button" data-filter-status="*" disabled="">All</button> -->
+				<button type="button" data-filter-status="open" disabled="">Open</button>
 				<button type="button" data-filter-status="progress">In Progress</button>
 				<button type="button" data-filter-status="closed">Closed</button>
 			</div>
-			<a href="#claim/new" role="button" id="create-btn" class="btn btn-primary round shadow fixed">
+			<a href="#claim/new" role="button" id="create-btn" class="btn btn-primary round shadow fixed z-3">
 				<svg class="current-color icon" viewBox="0 0 12 16">
 					<path fill-rule="evenodd" d="M12 9H7v5H5V9H0V7h5V2h2v5h5v2z"/>
 				</svg>
 			</a>
 		</header>
-		<main>
+		<main data-filter="open">
 			<slot name="claim"></slot>
 		</main>
 		<app-footer class="fixed bottom full-width"></app-footer>
