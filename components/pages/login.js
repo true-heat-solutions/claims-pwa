@@ -1,7 +1,6 @@
 import Router from '/js/Router.js';
 import {notify} from '/js/std-js/functions.js';
-import HTMLGravatarImageElement from '/js/gravatar-img.js';
-
+import {USERS} from '/users.js';
 class LoginPage extends HTMLElement {
 	constructor() {
 		super();
@@ -15,42 +14,53 @@ class LoginPage extends HTMLElement {
 			const form = doc.forms.login;
 			form.addEventListener('submit', async event => {
 				event.preventDefault();
-
+				const data = new FormData(form);
+				const email = data.get('username').toLowerCase();
 				try {
-					const resp = await fetch(form.action, {
-						headers: new Headers({
-							Accept: 'application/json',
-							'Content-Type': 'application/json',
-						}),
-						method: 'POST',
-						mode: 'cors',
-						body: JSON.stringify(this),
-					});
-
-					if (resp.ok) {
-						const body = await resp.json();
-						this.dispatchEvent(new CustomEvent('success', {detail: {
-							url: new URL(resp.url),
-							ok: resp.ok,
-							status: resp.status,
-							statusText: resp.statusText,
-							redirected: resp.redirected,
-							type: resp.type,
-							headers: Object.fromEntries(resp.headers.entries()),
-							body: body,
-						}}));
+					const user = await USERS.find(item => item.person.email === email);
+					console.log(user);
+					if (user !== undefined) {
+						this.dispatchEvent(new CustomEvent('success', {detail: {body: user,}}));
 					} else {
-						const detail = await resp.json();
-						if (detail.hasOwnProperty('error')) {
-							this.dispatchEvent(new CustomEvent('fail', {detail}));
-						}
+						throw new Error('User not found');
 					}
+					// const resp = await fetch(form.action, {
+					// 	headers: new Headers({
+					// 		Accept: 'application/json',
+					// 		'Content-Type': 'application/json',
+					// 	}),
+					// 	method: 'POST',
+					// 	mode: 'cors',
+					// 	body: JSON.stringify(this),
+					// });
+
+					// if (resp.ok) {
+					// 	const body = await resp.json();
+					// 	this.dispatchEvent(new CustomEvent('success', {detail: {
+					// 		url: new URL(resp.url),
+					// 		ok: resp.ok,
+					// 		status: resp.status,
+					// 		statusText: resp.statusText,
+					// 		redirected: resp.redirected,
+					// 		type: resp.type,
+					// 		headers: Object.fromEntries(resp.headers.entries()),
+					// 		body: body,
+					// 	}}));
+					// } else {
+					// 	const detail = await resp.json();
+					// 	if (detail.hasOwnProperty('error')) {
+					// 		this.dispatchEvent(new CustomEvent('fail', {detail}));
+					// 	}
+					// }
 				} catch(err) {
-					console.error(err);
+					await customElements.whenDefined('toast-message');
+					const Toast = customElements.get('toast-message');
+					await Toast.toast(err.message);
 				}
 			});
 
 			this.addEventListener('fail', async ({target, detail}) => {
+
 				target.form.querySelector('error-message').message = detail.error.message;
 			});
 
@@ -64,12 +74,9 @@ class LoginPage extends HTMLElement {
 				localStorage.setItem('email', detail.body.person.email);
 				localStorage.setItem('telephone', detail.body.person.telephone);
 
-				notify(`Welcome back, ${detail.body.person.honorificPrefix} ${detail.body.person.familyName}`, {
+				notify(`Welcome back, ${detail.body.person.givenName} ${detail.body.person.familyName}`, {
 					body: 'We missed you!',
-					icon: HTMLGravatarImageElement.url({
-						email: detail.body.person.email,
-						size: 64,
-					}),
+					icon: detail.body.person.image.url,
 				});
 				location.hash = '#claims';
 			});
