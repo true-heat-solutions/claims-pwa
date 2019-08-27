@@ -25,7 +25,8 @@ class ClaimsPage extends HTMLElement {
 
 			let items = await ClaimsPage.items;
 			if (location.hash.startsWith('#my-claims')) {
-				items = items.filter(item => item.lead.name === 'Kishan');
+				const user = localStorage.getItem('givenName');
+				items = items.filter(item => item.lead.name === user);
 			}
 			console.log(items);
 			await customElements.whenDefined('claim-item');
