@@ -10,15 +10,44 @@
 			:host {
 				display: block;
 			}
+
+			.grid {
+				grid-template-areas: "customer . ."
+					". status btn"
+					"date . .";
+				grid-template-columns: auto auto 2rem;
+				grid-template-rows: 1.3rem 1.3rem 1.3rem;
+			}
+
+			slot[name="customer"], ::slotted([slot="customer"]) {
+				grid-area: customer;
+			}
+
+			slot[name="date"], ::slotted([slot="date"]) {
+				grid-area: date;
+			}
+
+			slot[name="status"], ::slotted([slot="status"]) {
+				grid-area: status;
+			}
+
+			.edit-btn-container {
+				grid-area: btn;
+				font-size: 3rem;
+			}
 		</style>
 	</head>
 	<body>
-		<slot name="customer">Unknonw Customer</slot>
-		<slot name="date">Invalid Date</slot>
-		<slot name="status">Indeterminate</slot>
-		<svg id="edit-btn" class="current-color icon cursor-pointer" viewBox="0 0 8 16">
-			<path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/>
-		</svg>
+		<div class="grid row no-wrap">
+			<slot name="customer">Unknonw Customer</slot>
+			<slot name="date">Invalid Date</slot>
+			<slot name="status">Indeterminate</slot>
+			<span class="edit-btn-container">
+				<svg id="edit-btn" class="current-color icon cursor-pointer" viewBox="0 0 8 16">
+					<path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/>
+				</svg>
+			</span>
+		</div>
 		<hr />
 	</body>
 </html>

@@ -23,22 +23,37 @@
 				border-radius: 50%;
 			}
 
+			button[data-filter-status] {
+				background: none;
+				color: inherit;
+				padding: 0.6rem;
+				border-radius: none;
+			}
+
 			button[data-filter-status][disabled] {
-				background: var(--button-background);
-				color: var(--button-color);
+				background: none;
+				color: inherit;
+				box-shadow: none;
 				border-bottom: 3px solid #DED884;
+				border-radius: none;
+			}
+
+			#create-btn {
+				bottom: 0.6rem;
+				right: 0.6rem;
+				padding: 0.4rem;
 			}
 		</style>
 	</head>
 	<body>
-		<header class="clearfix">
+		<header class="clearfix background-accent color-alt">
 			<div class="flex row filters">
 				<button type="button" data-filter-status="*" disabled="">All</button>
 				<button type="button" data-filter-status="open">Open</button>
 				<button type="button" data-filter-status="progress">In Progress</button>
 				<button type="button" data-filter-status="closed">Closed</button>
 			</div>
-			<a href="#claim/new" role="button" class=" btn btn-primary round shadow fixed top right">
+			<a href="#claim/new" role="button" id="create-btn" class="btn btn-primary round shadow fixed">
 				<svg class="current-color icon" viewBox="0 0 12 16">
 					<path fill-rule="evenodd" d="M12 9H7v5H5V9H0V7h5V2h2v5h5v2z"/>
 				</svg>
@@ -47,6 +62,6 @@
 		<main>
 			<slot name="claim"></slot>
 		</main>
-		<app-footer></app-footer>
+		<app-footer class="fixed bottom full-width"></app-footer>
 	</body>
 </html>

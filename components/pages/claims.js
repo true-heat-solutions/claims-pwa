@@ -14,6 +14,7 @@ class ClaimsPage extends HTMLElement {
 			const frag = document.createDocumentFragment();
 			frag.append(...doc.head.children, ...doc.body.children);
 			const btns = frag.querySelectorAll('[data-filter-status]');
+
 			btns.forEach(btn => {
 				if (btn.dataset.filterStatus === '*') {
 					btn.addEventListener('click', event => {
