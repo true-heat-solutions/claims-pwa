@@ -47,6 +47,14 @@ input[hidden]:checked + label[for].btn-toggle .when-unchecked {
 	color: var(--accent-color);
 }
 
+.full-width {
+	width: 100%;
+}
+
+.zipcode {
+	width: 8ch;
+}
+
 .shaded {
 	background-color: #e8e8e8;
 	color: #909ba0;

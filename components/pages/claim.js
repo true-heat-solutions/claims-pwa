@@ -1,6 +1,6 @@
 import Router from '/js/Router.js';
 class ClaimPage extends HTMLElement {
-	constructor(uuid) {
+	constructor(uuid, mode = 'view') {
 		super();
 		this.attachShadow({mode: 'open'});
 
@@ -13,6 +13,7 @@ class ClaimPage extends HTMLElement {
 						await this.ready;
 						this.set('uuid', claim.uuid);
 						this.set('customer[name]', claim.customer.name);
+						this.set('customer[telephone]', claim.customer.telephone);
 						this.set('contractor', claim.contractor.name);
 						this.set('lead', claim.lead.name);
 						this.set('opened', claim.opened);
@@ -21,9 +22,23 @@ class ClaimPage extends HTMLElement {
 						this.set('customer[address][addressRegion]', claim.customer.address.addressRegion);
 						this.set('customer[address][postalCode]', claim.customer.address.postalCode);
 						this.set('customer[address][addressCountry]', claim.customer.address.addressCountry);
+						if (mode === 'edit') {
+							this.edit = true;
+							this.pageName = 'Edit Claim';
+						} else if (mode === 'view') {
+							this.edit = false;
+							this.pageName = 'View Claim';
+						}
 					}
+				} else {
+					throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
 				}
 			}).catch(console.error);
+		} else if (uuid === 'new') {
+			this.ready.then(() => {
+				this.edit = true;
+				this.pageName = 'Create Claim';
+			});
 		}
 
 		fetch(new URL('claim.html', import.meta.url)).then(async resp => {
@@ -100,6 +115,25 @@ class ClaimPage extends HTMLElement {
 		if (input instanceof HTMLElement) {
 			input.value = value;
 		}
+	}
+
+	get edit() {
+		return !this.shadowRoot.querySelector('fieldset').disabled;
+	}
+
+	set edit(edit) {
+		this.ready.then(this.shadowRoot.querySelector('fieldset').disabled = ! edit);
+	}
+
+	set pageName(text) {
+		const el = document.createElement('h3');
+		el.classList.add('center');
+		el.textContent = text;
+		el.slot = 'pageName';
+		this.ready.then(() => {
+			this.shadowRoot.querySelector('slot[name="pageName"]').assignedElements().forEach(el => el.remove());
+			this.append(el);
+		});
 	}
 }
 

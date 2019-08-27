@@ -13,7 +13,7 @@
 
 			legend {
 				width: 100%;
-				padding: 2rem;
+				padding: 0.3rem;
 			}
 
 			fieldset {
@@ -23,50 +23,67 @@
 
 			input {
 				border: 0;
-				border-bottom: 1px solid #343434;
+				border-bottom: 1px solid #787878;
+			}
+
+			label {
+				margin: 0.4rem;
+			}
+
+			input {
+				padding: 0.3rem;
+				margin: 0.1rem;
+				font-weight: bold;
+			}
+
+			label > span {
+				color: #787878;
 			}
 		</style>
 	</head>
 	<body>
 		<form name="claim">
-			<fieldset class="no-border" disabled="">
-				<legend class="background-accent color-alt center"><slot name="pageName">View Claim</slot></legend>
+			<fieldset class="no-border">
+				<legend class="background-accent color-alt">
+					<h3 class="center"><slot name="pageName">View Claim</slot></h3>
+				</legend>
 				<input type="hidden" name="uuid" />
 				<label class="block">
 					<span>Customer Name</span>
 					<br />
-					<input type="text" name="customer[name]" />
+					<input type="text" class="full-width" name="customer[name]" />
 				</label>
 				<label class="block">
 					<span>Prime Contractor</span>
 					<br />
-					<input name="contractor" />
+					<input name="contractor" class="full-width" />
 				</label>
 				<label class="block">
 					<span>Date of claim</span>
 					<br />
-					<input type="date" name="opened" />
+					<input type="date" name="opened" class="full-width" />
 				</label>
 				<label class="block">
 					<span>Customer address</span>
 					<br />
-					<input type="text" name="customer[address][streetAddress]" />
+					<input type="text" name="customer[address][streetAddress]" class="full-width inline-block" />
 					<br />
 					<input type="text" name="customer[address][addressLocality]" />
-					<input type="number" name="customer[address][postalCode]" min="10000" max="99999" />
+					<input type="number" name="customer[address][postalCode]" min="10000" max="99999" class="zipcode" />
 					<input type="hidden" name="customer[address][addressRegion]" value="CA" />
 					<input type="hidden" name="customer[address][addressCountry]" value="US" />
 				</label>
 				<label class="block">
 					<span>Customer number</span>
 					<br />
-					<innput type="tel" name="customer[telephone]" />
+					<input type="tel" name="customer[telephone]" class="full-width" />
 				</label>
 				<label class="block">
 					<span>Lead on Job</span>
 					<br />
-					<input type="text" name="lead" />
+					<input type="text" name="lead" class="full-width" />
 				</label>
+				<br />
 				<button type="submit" class="btn btn-accept btn-wide"><slot name="btnLabel">Start</slot></button>
 			</fieldset>
 		</form>
