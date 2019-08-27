@@ -1,5 +1,6 @@
 import Router from '/js/Router.js';
 import '../claim-item.js';
+import './claim.js';
 
 class ClaimsPage extends HTMLElement {
 	constructor() {
@@ -31,14 +32,18 @@ class ClaimsPage extends HTMLElement {
 				}
 			});
 
-			const items = await ClaimsPage.items;
+			let items = await ClaimsPage.items;
+			if (location.hash.startsWith('#my-claims')) {
+				items = items.filter(item => item.lead.name === 'Kishan');
+			}
+			console.log(items);
 			await customElements.whenDefined('claim-item');
 			const ClaimItem = customElements.get('claim-item');
 			const els = await Promise.all(items.map(async item => {
 				const el = new ClaimItem();
 				await el.ready;
 				el.uuid = item.uuid;
-				el.customer = item.customer;
+				el.customer = item.customer.name;
 				el.status = item.status;
 				el.date = item.opened;
 				el.slot = 'claim';
@@ -47,7 +52,7 @@ class ClaimsPage extends HTMLElement {
 
 			this.shadowRoot.append(frag);
 			this.append(...els);
-		});
+		}).catch(console.error);
 	}
 
 	get claims() {
@@ -60,7 +65,11 @@ class ClaimsPage extends HTMLElement {
 			const url = new URL('claims.json', import.meta.url);
 			const resp = await fetch(url);
 			if (resp.ok) {
-				resolve(await resp.json());
+				const items = await resp.json();
+				resolve(items.map(item => {
+					item.opened = new Date(item.opened);
+					return item;
+				}));
 			} else {
 				reject(new Error(`${resp.url} [${resp.status} ${resp.statusText}]`));
 			}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			@import url("/css/core-css/element.css");
+			@import url("/css/core-css/class-rules.css");
+			@import url("/css/styles/common.css");
+
+			:host {
+				display: block;
+			}
+
+			legend {
+				width: 100%;
+				padding: 2rem;
+			}
+
+			fieldset {
+				margin: 0;
+				padding: 0;
+			}
+
+			input {
+				border: 0;
+				border-bottom: 1px solid #343434;
+			}
+		</style>
+	</head>
+	<body>
+		<form name="claim">
+			<fieldset class="no-border" disabled="">
+				<legend class="background-accent color-alt center"><slot name="pageName">View Claim</slot></legend>
+				<input type="hidden" name="uuid" />
+				<label class="block">
+					<span>Customer Name</span>
+					<br />
+					<input type="text" name="customer[name]" />
+				</label>
+				<label class="block">
+					<span>Prime Contractor</span>
+					<br />
+					<input name="contractor" />
+				</label>
+				<label class="block">
+					<span>Date of claim</span>
+					<br />
+					<input type="date" name="opened" />
+				</label>
+				<label class="block">
+					<span>Customer address</span>
+					<br />
+					<input type="text" name="customer[address][streetAddress]" />
+					<br />
+					<input type="text" name="customer[address][addressLocality]" />
+					<input type="number" name="customer[address][postalCode]" min="10000" max="99999" />
+					<input type="hidden" name="customer[address][addressRegion]" value="CA" />
+					<input type="hidden" name="customer[address][addressCountry]" value="US" />
+				</label>
+				<label class="block">
+					<span>Customer number</span>
+					<br />
+					<innput type="tel" name="customer[telephone]" />
+				</label>
+				<label class="block">
+					<span>Lead on Job</span>
+					<br />
+					<input type="text" name="lead" />
+				</label>
+				<button type="submit" class="btn btn-accept btn-wide"><slot name="btnLabel">Start</slot></button>
+			</fieldset>
+		</form>
+	</body>
+</html>

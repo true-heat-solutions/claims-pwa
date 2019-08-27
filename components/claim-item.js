@@ -7,7 +7,7 @@ customElements.define('claim-item', class ClaimItemElement extends HTMLElement {
 			const parser = new DOMParser();
 			const html = await resp.text();
 			const doc = parser.parseFromString(html, 'text/html');
-			doc.getElementById('edit-btn').addEventListener('click', () => location.hash = `#claims/${this.uuid}`);
+			doc.getElementById('edit-btn').addEventListener('click', () => location.hash = `#claim/${this.uuid}`);
 			const frag = document.createDocumentFragment();
 			frag.append(...doc.head.children, ...doc.body.children);
 			this.shadowRoot.append(frag);
