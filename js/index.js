@@ -12,6 +12,7 @@ import '/components/pages/claims.js';
 import '/components/pages/account.js';
 import '/components/pages/forgot-password.js';
 import '/components/pages/register.js';
+import '/components/pages/profile.js';
 import '/components/app-footer.js';
 import '/components/logout-button.js';
 import './routes.js';

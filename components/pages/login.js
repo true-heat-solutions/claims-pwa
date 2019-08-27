@@ -62,6 +62,7 @@ class LoginPage extends HTMLElement {
 				localStorage.setItem('additionalName', detail.body.person.additionalName);
 				localStorage.setItem('familyName', detail.body.person.familyName);
 				localStorage.setItem('email', detail.body.person.email);
+				localStorage.setItem('telephone', detail.body.person.telephone);
 
 				notify(`Welcome back, ${detail.body.person.honorificPrefix} ${detail.body.person.familyName}`, {
 					body: 'We missed you!',
