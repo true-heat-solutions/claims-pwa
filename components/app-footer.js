@@ -11,6 +11,16 @@ customElements.define('app-footer', class AppFooterElement extends HTMLElement {
 			const frag = document.createDocumentFragment();
 			frag.append(...doc.head.children, ...doc.body.children);
 
+			try {
+				const page = location.hash.split('/')[0];
+				const current = frag.querySelector(`a[href="${page}"]`);
+				if (current instanceof HTMLElement) {
+					current.classList.add('active');
+				}
+			} catch(err) {
+				console.error(err);
+			}
+
 			this.shadowRoot.append(frag);
 		});
 	}

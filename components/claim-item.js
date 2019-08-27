@@ -55,6 +55,7 @@ customElements.define('claim-item', class ClaimItemElement extends HTMLElement {
 		const el = document.createElement('span');
 		el.slot = 'status';
 		el.textContent = val;
+		this.shadowRoot.getElementById('container').dataset.status = val;
 		this.append(el);
 	}
 

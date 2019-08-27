@@ -46,6 +46,7 @@ class ClaimsPage extends HTMLElement {
 				el.uuid = item.uuid;
 				el.customer = item.customer.name;
 				el.status = item.status;
+				el.dataset.status = item.status;
 				el.date = item.opened;
 				el.slot = 'claim';
 				return el;

@@ -19,6 +19,14 @@
 				grid-template-rows: 1.3rem 1.3rem 1.3rem;
 			}
 
+			#container[data-status="open"] slot[name="status"] {
+				color: #b9413a;
+			}
+
+			#container[data-status="closed"] slot[name="status"] {
+				color: #5c914f;
+			}
+
 			slot[name="customer"], ::slotted([slot="customer"]) {
 				grid-area: customer;
 			}
@@ -29,6 +37,11 @@
 
 			slot[name="status"], ::slotted([slot="status"]) {
 				grid-area: status;
+				text-transform: capitalize;
+			}
+
+			slot[name="status"] {
+				color: #eea452;
 			}
 
 			.edit-btn-container {
@@ -38,7 +51,7 @@
 		</style>
 	</head>
 	<body>
-		<div class="grid row no-wrap">
+		<div id="container" class="grid row no-wrap">
 			<slot name="customer">Unknonw Customer</slot>
 			<slot name="date">Invalid Date</slot>
 			<slot name="status">Indeterminate</slot>

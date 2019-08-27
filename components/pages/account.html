@@ -6,8 +6,17 @@
 			@import url("/css/core-css/element.css");
 			@import url("/css/core-css/class-rules.css");
 			@import url("/css/styles/common.css");
+
 			:host {
 				display: block;
+			}
+
+			header {
+				padding: 0.3rem;
+			}
+
+			.item {
+				padding: 1.6rem 0.6rem;
 			}
 		</style>
 	</head>
@@ -15,7 +24,7 @@
 		<header class="background-accent color-alt">
 			<h3 class="center">More</h3>
 		</header>
-		<a href="#profile" class="block clearfix">
+		<a href="#profile" class="block item clearfix">
 			<b>Profile</b>
 			<svg class="current-color icon float-right" viewBox="0 0 8 16">
 				<path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/>
@@ -24,6 +33,6 @@
 		</a>
 		<logout-button role="button" class="btn btn-wide btn-round">Logout</logout-button>
 		<br />
-		<app-footer></app-footer>
+		<app-footer class="fixed bottom full-width"></app-footer>
 	</body>
 </html>

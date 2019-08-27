@@ -14,17 +14,37 @@
 			.footer-items {
 				justify-content: space-evenly;
 			}
+
+			a.active {
+				pointer-events: none;
+			}
+
+			a.active .icon {
+				color: var(--accent-color);
+			}
 		</style>
 	</head>
 	<body>
 		<div class="flex row footer-items">
-			<a href="#claims">
+			<a href="#claims" class="inline-block center">
+				<svg class="current-color icon" viewBox="0 0 14 16">
+					<path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74L14 6z"/>
+				</svg>
+				<br />
 				<span>Claims</span>
 			</a>
-			<a href="#my-claims">
+			<a href="#my-claims" class="inline-block center">
+				<svg class="current-color icon" viewBox="0 0 14 16">
+					<path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74L14 6z"/>
+				</svg>
+				<br />
 				<span>My Claims</span>
 			</a>
-			<a href="#account">
+			<a href="#account" class="inline-block center">
+				<svg class="current-color icon" viewBox="0 0 14 16">
+					<path fill-rule="evenodd" d="M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74L14 6z"/>
+				</svg>
+				<br />
 				<span>More</span>
 			</a>
 		</div>
