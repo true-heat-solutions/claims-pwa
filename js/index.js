@@ -1,3 +1,4 @@
+import 'https://unpkg.com/@webcomponents/custom-elements@1.2.4/custom-elements.min.js';
 import '/js/std-js/deprefixer.js';
 import '/js/std-js/shims.js';
 import './share-button.js';
