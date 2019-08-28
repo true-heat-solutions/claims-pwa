@@ -38,6 +38,7 @@ class ClaimsPage extends HTMLElement {
 				el.customer = item.customer.name;
 				el.status = item.status;
 				el.dataset.status = item.status;
+				el.classList.add('card');
 				el.date = item.opened;
 				el.slot = 'claim';
 				return el;

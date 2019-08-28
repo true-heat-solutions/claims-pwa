@@ -19,7 +19,7 @@ body > :first-child {
 
 @media(min-width: 800px) {
 	body {
-		background-color: #989898;
+		background-color: #2b2b2b;
 	}
 
 	body > :first-child {
