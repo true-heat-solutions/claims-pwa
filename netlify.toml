@@ -22,7 +22,7 @@
       default-src 'self';
       base-uri 'self';
       img-src 'self' https://secure.gravatar.com/avatar/ https://i.imgur.com/ https://cdn.kernvalley.us/;
-      script-src 'self' https://cdn.kernvalley.us/ https://unpkg.com/@webcomponents https://cdn.polyfill.io/v2/;
+      script-src 'self' https://cdn.kernvalley.us/ https://unpkg.com/@webcomponents/custom-elements@1.2.4/ https://cdn.polyfill.io/v2/;
       style-src 'self' https://cdn.kernvalley.us/;
       connect-src 'self' https://api.kernvalley.us/ https://cdn.kernvalley.us/;
       worker-src: 'self';
