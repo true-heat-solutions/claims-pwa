@@ -1,23 +1,24 @@
 import 'https://unpkg.com/@webcomponents/custom-elements@1.2.4/custom-elements.min.js';
-import '/js/std-js/deprefixer.js';
-import '/js/std-js/shims.js';
+import './std-js/deprefixer.js';
+import './std-js/shims.js';
 // import './share-button.js';
 import './current-year.js';
 // import './gravatar-img.js';
 // import './imgur-img.js';
-import '/components/pages/login.js';
-import '/components/error-message.js';
-import '/components/toast-message.js';
-import '/components/pages/claims.js';
-import '/components/pages/account.js';
-import '/components/pages/forgot-password.js';
-import '/components/pages/register.js';
-import '/components/pages/profile.js';
-import '/components/app-footer.js';
-import '/components/logout-button.js';
-import '/components/logo-img.js';
+import '../components/pages/login.js';
+import '../components/error-message.js';
+import '../components/toast-message.js';
+import '../components/pages/claims.js';
+import '../components/pages/account.js';
+import '../components/pages/forgot-password.js';
+import '../components/pages/register.js';
+import '../components/pages/profile.js';
+import '../components/app-footer.js';
+import '../components/logout-button.js';
+import '../components/logo-img.js';
+import '../components/back-button.js';
 import './routes.js';
-import {$, ready, registerServiceWorker} from '/js/std-js/functions.js';
+import {$, ready, registerServiceWorker} from './std-js/functions.js';
 
 if (document.documentElement.dataset.hasOwnProperty('serviceWorker')) {
 	registerServiceWorker(document.documentElement.dataset.serviceWorker).catch(console.error);

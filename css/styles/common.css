@@ -66,6 +66,16 @@ input[hidden]:checked + label[for].btn-toggle .when-unchecked {
 	padding: 1.2rem 0.1rem;
 }
 
+.no-margins {
+	margin: 0;
+}
+
+.page-header {
+	background: var(--accent-color);
+	color: var(--alt-color);
+	padding: 0.4rem;
+}
+
 .shaded {
 	background-color: #e8e8e8;
 	color: #909ba0;
