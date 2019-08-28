@@ -15,6 +15,22 @@ export const USERS = [{
 	},
 	token: 'djkflghjkdfnbgjkdfgg',
 }, {
+	username: 'tiffany@kernvalley.us',
+	uuid: '65cd4c2d-0914-434d-b69e-c8fd601b9579',
+	person: {
+		honorificPrefix: 'Mrs',
+		givenName: 'Tiffany',
+		familyName: 'Murray',
+		telephone: '+1-555-555-5555',
+		email: 'tiffany@kernvalley.us',
+		image: {
+			url: 'https://cloud.kernvalley.us/avatar/tiff/64',
+			width: 64,
+			height: 64,
+		}
+	},
+	token: 'djkflghjkdfnbgjkdfgg',
+}, {
 	username: 'paul@trueheatsolutions.com',
 	uuid: '1cda4666-5c78-45d7-a44b-74ff75b04568',
 	person: {
@@ -24,7 +40,7 @@ export const USERS = [{
 		telephone: '+1-555-555-5555',
 		email: 'paul@trueheatsolutions.com',
 		image: {
-			url: 'https://secure.gravatar.com/avatar/85cfe11005ae53cd6d0b9094f26298f?s=64&d=mm',
+			url: 'https://cloud.kernvalley.us/avatar/paulduncan/64',
 			width: 64,
 			height: 64,
 		},
