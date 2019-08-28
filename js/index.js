@@ -1,3 +1,4 @@
+import 'https://cdn.polyfill.io/v2/polyfill.min.js?unknown=polyfill&features=es6,MutationObserver,IntersectionObserver,IntersectionObserverEntry,Object.values,Object.entries,NodeList.prototype.@@iterator,Array.prototype.@@iterator&flags=gated';
 import 'https://unpkg.com/@webcomponents/custom-elements@1.2.4/custom-elements.min.js';
 import './std-js/deprefixer.js';
 import './std-js/shims.js';
