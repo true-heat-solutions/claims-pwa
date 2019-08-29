@@ -1,11 +1,13 @@
 'use strict';
 
 const config = {
-	version: '1.0.0-a1',
+	version: '1.0.0-a2',
 	stale: [
 		'/',
 		'/users.js',
 		'/js/index.js',
+		'/js/Router.js',
+		'/js/current-year.js',
 		'/components/pages/login.js',
 		'/components/pages/login.html',
 		'/components/error-message.js',
@@ -49,6 +51,7 @@ const config = {
 		'/css/styles/main.css',
 		'/css/styles/sidebar.css',
 		'/css/styles/common.css',
+		'/css/styles/footer.css',
 		'/css/core-css/rem.css',
 		'/css/core-css/viewport.css',
 		'/css/core-css/element.css',
@@ -92,23 +95,27 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+	const url = new URL(event.request.url);
+	url.hash = '';
 	switch(event.request.method) {
 	case 'GET':
-		if (Array.isArray(config.stale) && config.stale.includes(event.request.url)) {
+		if (Array.isArray(config.stale) && config.stale.includes(url.href)) {
 			event.respondWith((async () => {
-				const cached = await caches.match(event.request);
+				const cached = await caches.match(url);
 				if (cached instanceof Response) {
 					return cached;
 				} else {
 					return await fetch(event.request);
 				}
 			})());
-		} else if (Array.isArray(config.fresh) && config.fresh.includes(event.request.url)) {
+		} else if (Array.isArray(config.fresh) && config.fresh.includes(url.href)) {
 			event.respondWith((async () => {
 				if (navigator.onLine) {
-					const resp = await fetch(event.request);
+					const resp = await fetch(url.href);
 					const cache = await caches.open(config.version);
-					cache.add(resp.clone());
+					if (resp.ok) {
+						cache.add(resp.clone());
+					}
 					return resp;
 				} else {
 					return await caches.match(event.request);

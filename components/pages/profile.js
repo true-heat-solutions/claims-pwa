@@ -50,7 +50,16 @@ class ProfilePage extends HTMLElement {
 	}
 
 	toJSON() {
-		return Object.fromEntries(new FormData(this.shadowRoot.querySelector('form')).entries());
+		return {
+			givenName: this.get('givenName'),
+			familyName: this.get('familyName'),
+			password: {
+				current: this.get('password[current]'),
+				'new': this.get('password[new]'),
+				repeat: this.get('password[repeat]'),
+			},
+			telephone: this.get('telephone'),
+		};
 	}
 }
 
