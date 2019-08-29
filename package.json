@@ -11,7 +11,7 @@
     },
     "dir": {
       "css": "css/",
-      "js": "js/",
+      "js": "js/ components/",
       "img": "img/",
       "html": "./"
     }
