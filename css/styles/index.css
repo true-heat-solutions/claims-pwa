@@ -15,6 +15,7 @@ body > :first-child {
 	background-color: var(--primary-color);
 	height: 100vh;
 	overflow-y: auto;
+	animation: slideInUp 350ms ease-in-out;
 }
 
 @media(min-width: 800px) {
