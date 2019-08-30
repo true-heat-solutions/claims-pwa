@@ -66,8 +66,12 @@ class ProfilePage extends HTMLElement {
 customElements.define('profile-page', ProfilePage);
 
 Router.setRoute('profile', async (...args) => {
-	const el = new ProfilePage(...args);
-	const app = document.body;
-	[...app.children].forEach(el => el.remove());
-	app.append(el);
+	if (localStorage.hasOwnProperty('token')) {
+		const el = new ProfilePage(...args);
+		const app = document.body;
+		[...app.children].forEach(el => el.remove());
+		app.append(el);
+	} else {
+		location.href = '#login';
+	}
 });

@@ -74,17 +74,25 @@ class ClaimsPage extends HTMLElement {
 customElements.define('claims-page', ClaimsPage);
 
 Router.setRoute('claims', async uuid => {
-	const el = new ClaimsPage(uuid);
-	console.log(uuid);
-	const app = document.body;
-	[...app.children].forEach(el => el.remove());
-	app.append(el);
+	if (localStorage.hasOwnProperty('token')) {
+		const el = new ClaimsPage(uuid);
+		console.log(uuid);
+		const app = document.body;
+		[...app.children].forEach(el => el.remove());
+		app.append(el);
+	} else {
+		location.hash = '#login';
+	}
 });
 
 Router.setRoute('my-claims', async uuid => {
-	const el = new ClaimsPage(uuid);
-	console.log(uuid);
-	const app = document.body;
-	[...app.children].forEach(el => el.remove());
-	app.append(el);
+	if (localStorage.hasOwnProperty('token')) {
+		const el = new ClaimsPage(uuid);
+		console.log(uuid);
+		const app = document.body;
+		[...app.children].forEach(el => el.remove());
+		app.append(el);
+	} else {
+		location.href = '#login';
+	}
 });

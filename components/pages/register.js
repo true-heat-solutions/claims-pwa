@@ -40,8 +40,12 @@ class RegisterPage extends HTMLElement {
 customElements.define('register-page', RegisterPage);
 
 Router.setRoute('register', async (...args) => {
-	const el = new RegisterPage(...args);
-	const app = document.body;
-	[...app.children].forEach(el => el.remove());
-	app.append(el);
+	if (localStorage.hasOwnProperty('token')) {
+		location.href = '#claims';
+	} else {
+		const el = new RegisterPage(...args);
+		const app = document.body;
+		[...app.children].forEach(el => el.remove());
+		app.append(el);
+	}
 });

@@ -40,8 +40,12 @@ class ForgotPasswordPage extends HTMLElement {
 customElements.define('forgot-password-page', ForgotPasswordPage);
 
 Router.setRoute('forgot-password', async (...args) => {
-	const el = new ForgotPasswordPage(...args);
-	const app = document.body;
-	[...app.children].forEach(el => el.remove());
-	app.append(el);
+	if (localStorage.hasOwnProperty('token')) {
+		location.href = '#claims';
+	} else {
+		const el = new ForgotPasswordPage(...args);
+		const app = document.body;
+		[...app.children].forEach(el => el.remove());
+		app.append(el);
+	}
 });

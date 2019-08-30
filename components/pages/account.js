@@ -19,8 +19,12 @@ class AccountPage extends HTMLElement {
 customElements.define('account-page', AccountPage);
 
 Router.setRoute('account', async (...args) => {
-	const el = new AccountPage(...args);
-	const app = document.body;
-	[...app.children].forEach(el => el.remove());
-	app.append(el);
+	if (localStorage.hasOwnProperty('token')) {
+		const el = new AccountPage(...args);
+		const app = document.body;
+		[...app.children].forEach(el => el.remove());
+		app.append(el);
+	} else {
+		location.href = '#login';
+	}
 });

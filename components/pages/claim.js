@@ -140,8 +140,12 @@ class ClaimPage extends HTMLElement {
 customElements.define('claim-page', ClaimPage);
 
 Router.setRoute('claim', async (...args) => {
-	const el = new ClaimPage(...args);
-	const app = document.body;
-	[...app.children].forEach(el => el.remove());
-	app.append(el);
+	if (localStorage.hasOwnProperty('token')) {
+		const el = new ClaimPage(...args);
+		const app = document.body;
+		[...app.children].forEach(el => el.remove());
+		app.append(el);
+	} else {
+		location.href = '#login';
+	}
 });

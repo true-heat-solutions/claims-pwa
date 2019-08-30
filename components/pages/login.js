@@ -113,8 +113,12 @@ class LoginPage extends HTMLElement {
 customElements.define('login-page', LoginPage);
 
 Router.setRoute('login', async (...args) => {
-	const el = new LoginPage(...args);
-	const app = document.body;
-	[...app.children].forEach(el => el.remove());
-	app.append(el);
+	if (localStorage.hasOwnProperty('token')) {
+		location.href = '#claims';
+	} else {
+		const el = new LoginPage(...args);
+		const app = document.body;
+		[...app.children].forEach(el => el.remove());
+		app.append(el);
+	}
 });
