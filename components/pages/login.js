@@ -74,10 +74,6 @@ class LoginPage extends HTMLElement {
 				localStorage.setItem('email', detail.body.person.email);
 				localStorage.setItem('telephone', detail.body.person.telephone);
 
-				notify(`Welcome back, ${detail.body.person.givenName} ${detail.body.person.familyName}`, {
-					body: 'We missed you!',
-					icon: detail.body.person.image.url,
-				});
 				location.hash = '#claims';
 			});
 
