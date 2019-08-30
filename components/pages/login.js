@@ -1,10 +1,11 @@
 import Router from '/js/Router.js';
-import {notify} from '/js/std-js/functions.js';
 import {USERS} from '/users.js';
 class LoginPage extends HTMLElement {
-	constructor() {
+	constructor(username = null, redirect = 'claims') {
 		super();
+		console.log({username, redirect});
 		this.attachShadow({mode: 'open'});
+		this.redirect = redirect;
 
 		fetch(new URL('login.html', import.meta.url)).then(async resp => {
 			const parser = new DOMParser();
@@ -60,7 +61,6 @@ class LoginPage extends HTMLElement {
 			});
 
 			this.addEventListener('fail', async ({target, detail}) => {
-
 				target.form.querySelector('error-message').message = detail.error.message;
 			});
 
@@ -74,11 +74,14 @@ class LoginPage extends HTMLElement {
 				localStorage.setItem('email', detail.body.person.email);
 				localStorage.setItem('telephone', detail.body.person.telephone);
 
-				location.hash = '#claims';
+				location.hash = this.redirect;
 			});
 
 			frag.append(...doc.head.children, ...doc.body.children);
 			this.shadowRoot.append(frag);
+			if (typeof username === 'string') {
+				this.username = username;
+			}
 			this.dispatchEvent(new Event('ready'));
 		});
 	}
@@ -101,6 +104,18 @@ class LoginPage extends HTMLElement {
 		return this.shadowRoot.querySelector('form');
 	}
 
+	get redirect() {
+		return this.hasAttribute('redirect') ? `#${this.getAttribute('redirect')}` : '#claims';
+	}
+
+	set redirect(val) {
+		if (typeof val === 'string') {
+			this.setAttribute('redirect', val);
+		} else {
+			this.removeAttribute('redirect');
+		}
+	}
+
 	toJSON() {
 		return Object.fromEntries(new FormData(this.shadowRoot.querySelector('form')).entries());
 	}
@@ -108,11 +123,11 @@ class LoginPage extends HTMLElement {
 
 customElements.define('login-page', LoginPage);
 
-Router.setRoute('login', async (...args) => {
+Router.setRoute('login', async (username = null, redirect = 'claims') => {
 	if (localStorage.hasOwnProperty('token')) {
-		location.href = '#claims';
+		location.href = `#${redirect}`;
 	} else {
-		const el = new LoginPage(...args);
+		const el = new LoginPage(username, redirect);
 		const app = document.body;
 		[...app.children].forEach(el => el.remove());
 		app.append(el);
