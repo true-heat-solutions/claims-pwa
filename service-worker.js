@@ -1,7 +1,7 @@
 'use strict';
 
 const config = {
-	version: '1.0.0-a5',
+	version: '1.0.0-a6',
 	stale: [
 		'/',
 		'/users.js',
