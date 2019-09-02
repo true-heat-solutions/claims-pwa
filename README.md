@@ -1,19 +1,10 @@
-# template-basic
-A fairly bare-bones template repository
+# True Heat
+A PWA for True Heat Solutions
 
-[![Build Status](https://travis-ci.org/shgysk8zer0/template-basic.svg?branch=master)](https://travis-ci.org/shgysk8zer0/template-basic)
-[![GitHub license](https://img.shields.io/github/license/shgysk8zer0/template-basic.svg)](https://github.com/shgysk8zer0/template-basic/blob/master/LICENSE)
-![GitHub last commit](https://img.shields.io/github/last-commit/shgysk8zer0/template-basic.svg)
-![GitHub release](https://img.shields.io/github/release/shgysk8zer0/template-basic.svg)
-
-![Keybase PGP](https://img.shields.io/keybase/pgp/shgysk8zer0.svg)
-![Keybase BTC](https://img.shields.io/keybase/btc/shgysk8zer0.svg)
-
-![GitHub followers](https://img.shields.io/github/followers/shgysk8zer0.svg?style=social)
-![GitHub forks](https://img.shields.io/github/forks/shgysk8zer0/template-basic.svg?style=social)
-![GitHub stars](https://img.shields.io/github/stars/shgysk8zer0/template-basic.svg?style=social)
-![Twitter Follow](https://img.shields.io/twitter/follow/shgysk8zer0.svg?style=social)
-- - - 
+[![Build Status](https://travis-ci.com/true-heat-solutions/claims-pwa.svg?branch=master)](https://travis-ci.com/true-heat-solutions/claims-pwa)
+[![GitHub license](https://img.shields.io/github/license/true-heat-solutions/true-heat.svg)](https://github.com/true-heat-solutions/true-heat/blob/master/LICENSE)
+![GitHub last commit](https://img.shields.io/github/last-commit/true-heat-solutions/true-heat.svg)
+![GitHub release](https://img.shields.io/github/release/true-heat-solutions/true-heat.svg)
 
 - [Code of Conduct](./.github/CODE_OF_CONDUCT.md)
 - [Contributing](./.github/CONTRIBUTING.md)

@@ -1,0 +1,86 @@
+:host {
+	box-sizing: border-box;
+	overflow-x: hidden;
+	position: relative;
+}
+
+input[hidden] + label[for].btn-toggle {
+	background-color: var(--button-disabled-background);
+	margin: 0.3rem;
+	transition: background-color 300ms ease-in-out;
+}
+
+input[hidden]:checked + label[for].btn-toggle {
+	background-color: var(--button-background);
+}
+
+input[hidden]:not(:checked) + label[for].btn-toggle .when-checked {
+	display: none;
+}
+
+input[hidden]:checked + label[for].btn-toggle .when-unchecked {
+	display: none;
+}
+
+.btn.btn-wide {
+	width: 80%;
+	text-align: center;
+}
+
+.btn.btn-round {
+	border-radius: 13rem;
+}
+
+.input-group {
+	padding: 0.2em;
+	margin: 0.3rem 1.2rem;
+	border: 1px solid #efefef;
+	border-radius: 6px;
+	text-align: initial;
+}
+
+.input-group .input {
+	border: none;
+	font-size: 1.2em;
+	width: calc(100% - 1.1em);
+}
+
+::placeholder {
+	color: #e7e7e7;
+}
+
+.input-group > label {
+	color: var(--accent-color);
+}
+
+.full-width {
+	width: 100%;
+}
+
+.zipcode {
+	width: 8ch;
+}
+
+.container {
+	margin: 0 1.6rem;
+	padding: 1.2rem 0.1rem;
+}
+
+.no-margins {
+	margin: 0;
+}
+
+.page-header {
+	background: var(--accent-color);
+	color: var(--alt-color);
+	padding: 0.4rem;
+}
+
+.shaded {
+	background-color: #e8e8e8;
+	color: #909ba0;
+	padding: 64px;
+	width: 165px;
+	height: 165px;
+	font-size: 2.5rem;
+}

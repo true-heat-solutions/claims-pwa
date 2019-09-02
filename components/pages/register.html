@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			@import url("/css/core-css/element.css");
+			@import url("/css/core-css/class-rules.css");
+			@import url("/css/styles/common.css");
+
+			:host {
+				display: block;
+			}
+
+			header {
+				justify-content: space-evenly;
+			}
+
+			#name-container {
+				display: inline-flex;
+				flex-direction: row;
+				width: calc(100% - 3rem);
+			}
+
+			logo-img {
+				margin-top: 1rem;
+				margin-bottom: 3rem;
+			}
+
+			#login-container {
+				bottom: 2.5rem;
+			}
+		</style>
+	</head>
+	<body>
+		<form name="register" class="relative center">
+			<logo-img></logo-img>
+			<error-message></error-message>
+			<div class="input-group">
+				<label for="login-given-name">
+					<svg class="current-color icon color-accent" viewBox="0 0 16 16">
+						<path d="M10.555 8.094C9.849 8.717 9.015 9 8 9c-1.016 0-1.853-.29-2.559-.914-1.109.363-2.436 1.288-2.437 2.902L3 14c0 .554.446 1 1 1h8c.554 0 1-.446 1-1v-3c0-1.387-1.102-2.556-2.445-2.906z"/>
+						<path d="M11 5a3 3 0 1 1-6 0 3 3 0 1 1 6 0z" overflow="visible"/>
+					</svg>
+				</label>
+				<div id="name-container">
+					<input type="text" name="givenName" id="login-given-name" class="input inline-block" placeholder="First" autocomplete="given-name" required="" />
+					<input type="text" name="familyName" id="login-family-name" class="input inline-block" placeholder="Last" autocomplete="family-name" required="" />
+				</div>
+			</div>
+			<div class="input-group">
+				<label for="login-email">
+					<svg class="current-color icon" viewBox="0 0 14 16">
+						<path fill-rule="evenodd" d="M0 4v8c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H1c-.55 0-1 .45-1 1zm13 0L7 9 1 4h12zM1 5.5l4 3-4 3v-6zM2 12l3.5-3L7 10.5 8.5 9l3.5 3H2zm11-.5l-4-3 4-3v6z"/>
+					</svg>
+				</label>
+				<input type="email" name="email" id="login-email" class="input" placeholder="user@example.com" autocomplete="email" required="" />
+			</div>
+			<div class="input-group">
+				<label for="login-password">
+					<svg class="current-color icon" viewBox="0 0 16 16">
+						<path d="M5 3C2.25 3 0 5.25 0 8s2.25 5 5 5c1.586 0 2.903-.845 3.813-2h5.593l.22-.75 1.03-4L15.97 5H8.813C7.903 3.845 6.586 3 5 3zm0 2c1.116 0 2.038.595 2.563 1.5l.312.5h5.531l-.53 2H7.874l-.312.5C7.038 10.405 6.116 11 5 11c-1.669 0-3-1.331-3-3s1.331-3 3-3z" overflow="visible"/>
+						<path d="M14.498 8H9l-.563 2H14z" opacity=".35" overflow="visible"/>
+						<path d="M5 8a1 1 0 1 1-2 0 1 1 0 1 1 2 0z" overflow="visible"/>
+					</svg>
+				</label>
+				<input type="password" name="password" id="login-password" class="input" placeholder="********" autocomplete="new-password" required="" />
+			</div>
+			<div class="input-group">
+				<label for="login-password-repeat">
+					<svg class="current-color icon" viewBox="0 0 16 16">
+						<path d="M5 3C2.25 3 0 5.25 0 8s2.25 5 5 5c1.586 0 2.903-.845 3.813-2h5.593l.22-.75 1.03-4L15.97 5H8.813C7.903 3.845 6.586 3 5 3zm0 2c1.116 0 2.038.595 2.563 1.5l.312.5h5.531l-.53 2H7.874l-.312.5C7.038 10.405 6.116 11 5 11c-1.669 0-3-1.331-3-3s1.331-3 3-3z" overflow="visible"/>
+						<path d="M14.498 8H9l-.563 2H14z" opacity=".35" overflow="visible"/>
+						<path d="M5 8a1 1 0 1 1-2 0 1 1 0 1 1 2 0z" overflow="visible"/>
+					</svg>
+				</label>
+				<input type="password" name="password-repeat" id="login-password-repeat" class="input" placeholder="********" autocomplete="new-password" required="" />
+			</div>
+			<div class="input-group">
+				<label for="login-telephone">
+					<svg class="current-color icon" version="1" viewBox="0 0 16 16">
+						<path d="M13.032 1c.534 0 .969.427.969.969v.062c-.017 6.613-5.383 11.97-12 11.97H1.97c-.545 0-.97-.447-.97-1v-3c0-.555.447-1 1-1h2c.555 0 1 .445 1 1v.468A8.967 8.967 0 0 0 10.47 5H10c-.553 0-1-.446-1-1V2c0-.554.447-1 1-1h3.032z"/>
+					</svg>
+				</label>
+				<input type="tel" name="telephone" id="login-telephone" class="input" placeholder="+1-555-5555" autocomplete="telephone" />
+			</div>
+			<button type="submit" class="btn btn-primary btn-wide btn-round">Create Account</button>
+		</form>
+		<div id="login-container" class="center absolute full-width">
+			<a href="#login" class="block center color-accent">I already have an account</a>
+		</div>
+	</body>
+</html>

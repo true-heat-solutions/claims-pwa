@@ -1,10 +1,25 @@
-import 'https://cdn.kernvalley.us/js/std-js/deprefixer.js';
-import 'https://cdn.kernvalley.us/js/std-js/shims.js';
-import './share-button.js';
+// import 'https://cdn.polyfill.io/v2/polyfill.min.js?unknown=polyfill&features=es6,MutationObserver,IntersectionObserver,IntersectionObserverEntry,Object.values,Object.entries,NodeList.prototype.@@iterator,Array.prototype.@@iterator&flags=gated';
+import 'https://unpkg.com/@webcomponents/custom-elements@1.2.4/custom-elements.min.js';
+import './std-js/deprefixer.js';
+import './std-js/shims.js';
+// import './share-button.js';
 import './current-year.js';
-import './gravatar-img.js';
-import './imgur-img.js';
-import {$, ready, registerServiceWorker} from 'https://cdn.kernvalley.us/js/std-js/functions.js';
+// import './gravatar-img.js';
+// import './imgur-img.js';
+import '../components/pages/login.js';
+import '../components/error-message.js';
+import '../components/toast-message.js';
+import '../components/pages/claims.js';
+import '../components/pages/account.js';
+import '../components/pages/forgot-password.js';
+import '../components/pages/register.js';
+import '../components/pages/profile.js';
+import '../components/app-footer.js';
+import '../components/logout-button.js';
+import '../components/logo-img.js';
+import '../components/back-button.js';
+import './routes.js';
+import {$, ready, registerServiceWorker} from './std-js/functions.js';
 
 if (document.documentElement.dataset.hasOwnProperty('serviceWorker')) {
 	registerServiceWorker(document.documentElement.dataset.serviceWorker).catch(console.error);
@@ -13,6 +28,8 @@ if (document.documentElement.dataset.hasOwnProperty('serviceWorker')) {
 document.documentElement.classList.replace('no-js', 'js');
 document.body.classList.toggle('no-dialog', document.createElement('dialog') instanceof HTMLUnknownElement);
 document.body.classList.toggle('no-details', document.createElement('details') instanceof HTMLUnknownElement);
+
+
 
 ready().then(async () => {
 	$('[data-scroll-to]').click(event => {

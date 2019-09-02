@@ -1,4 +1,4 @@
-import md5 from 'https://cdn.kernvalley.us/js/std-js/md5.js';
+import md5 from '/js/std-js/md5.js';
 
 const GRAVATAR = 'https://secure.gravatar.com/avatar/';
 const SIZES = [

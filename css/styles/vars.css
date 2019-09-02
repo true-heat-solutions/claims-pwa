@@ -1,7 +1,7 @@
 :root {
 	--default-color: #343434;
 	--primary-color: #fafafa;
-	--accent-color: #528ff9;
+	--accent-color: #5d76f4;
 	--contrast-color: #4c4c4c;
 	--alt-color: #fefefe;
 	--main-font: "Roboto";
@@ -17,7 +17,7 @@
 	--button-color: var(--alt-color);
 	--button-border: none;
 	--button-border-radius: 0.15rem;
-	--button-padding: 0.4rem;
+	--button-padding: 0.8rem 0.4rem;
 
 	--button-active-background: #1048a1;
 	--button-active-color: var(--button-color);
@@ -38,4 +38,6 @@
 	--nav-height: 2.7rem;
 	--header-height: 0;
 	--footer-height: auto;
+
+	--placeholder-color: #e7e7e7;
 }
