@@ -10,6 +10,12 @@ customElements.define('claim-item', class ClaimItemElement extends HTMLElement {
 			doc.querySelector('.edit-btn-container').addEventListener('click', () => this.edit());
 			const frag = document.createDocumentFragment();
 			frag.append(...doc.head.children, ...doc.body.children);
+			frag.querySelector('[name="status"]').addEventListener('change', event => {
+				this.shadowRoot.getElementById('container').dataset.status = event.target.value;
+				this.dataset.status = event.target.value;
+			}, {
+				passive: true,
+			});
 			this.shadowRoot.append(frag);
 			this.dispatchEvent(new Event('ready'));
 		});
@@ -52,21 +58,12 @@ customElements.define('claim-item', class ClaimItemElement extends HTMLElement {
 	}
 
 	set status(val) {
-		const el = document.createElement('span');
-		el.slot = 'status';
-		el.textContent = val;
 		this.shadowRoot.getElementById('container').dataset.status = val;
-		this.append(el);
+		this.shadowRoot.querySelector('[name="status"]').value = val;
 	}
 
 	get status() {
-		const slot = this.shadowRoot.querySelector('slot[name="status"]');
-		if (slot instanceof HTMLElement) {
-			const nodes = slot.assignedElements();
-			return nodes[0].textContent;
-		} else {
-			return null;
-		}
+		return this.shadowRoot.querySelector('[name="status"]').value;
 	}
 
 	view() {
