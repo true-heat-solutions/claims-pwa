@@ -52,12 +52,16 @@
 				<label class="block">
 					<span>Customer Name</span>
 					<br />
-					<input type="text" class="full-width" name="customer[name]" />
+					<input type="text" name="customer[givenName]" />
+					<input type="text" name="customer[familyName]" />
+					<input type="hidden" name="customer[identifier]" />
 				</label>
 				<label class="block">
 					<span>Prime Contractor</span>
 					<br />
-					<input name="contractor" class="full-width" />
+					<input type="text" name="contractor[givenName]" />
+					<input type="text" name="contractor[familyName]" />
+					<input type="hidden" name="contractor[identifier]" />
 				</label>
 				<label class="block">
 					<span>Date of claim</span>
@@ -73,6 +77,7 @@
 					<input type="number" name="customer[address][postalCode]" min="10000" max="99999" class="zipcode" />
 					<input type="hidden" name="customer[address][addressRegion]" value="CA" />
 					<input type="hidden" name="customer[address][addressCountry]" value="US" />
+					<input type="hidden" name="customer[address][identifier]" />
 				</label>
 				<label class="block">
 					<span>Customer number</span>
@@ -82,7 +87,9 @@
 				<label class="block">
 					<span>Lead on Job</span>
 					<br />
-					<input type="text" name="lead" class="full-width" />
+					<input type="text" name="lead[givenName]" />
+					<input type="text" name="lead[familyName]" />
+					<input type="hidden" name="lead[identifier]" />
 				</label>
 				<br />
 				<div class="center">

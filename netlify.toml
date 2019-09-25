@@ -24,7 +24,7 @@
       img-src *;
       script-src 'self' https://cdn.kernvalley.us/ https://unpkg.com/@webcomponents/custom-elements@1.2.4/ https://cdn.polyfill.io/v2/;
       style-src 'self' 'unsafe-inline' https://cdn.kernvalley.us/;
-      connect-src 'self' https://api.kernvalley.us/ https://cdn.kernvalley.us/ https://unpkg.com/@webcomponents/custom-elements@1.2.4/ https://cdn.polyfill.io/v2/;
+      connect-src 'self' https://api.kernvalley.us/ https://cdn.kernvalley.us/ https://unpkg.com/@webcomponents/custom-elements@1.2.4/ https://cdn.polyfill.io/v2/ https://e8640586-0899-49fe-a622-4c98878f4c31.kernvalley.us;
       worker-src: 'self';
       font-src 'self' https://cdn.kernvalley.us/;
       media-src 'none';

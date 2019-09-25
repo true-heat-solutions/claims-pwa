@@ -1,4 +1,6 @@
+import {ENDPOINT} from '/js/consts.js';
 import Router from '/js/Router.js';
+
 class ForgotPasswordPage extends HTMLElement {
 	constructor() {
 		super();
@@ -18,7 +20,17 @@ class ForgotPasswordPage extends HTMLElement {
 				const pre = document.createElement('pre');
 				const code = document.createElement('code');
 				pre.slot = 'content';
-				code.textContent = JSON.stringify(this, null, 2);
+				const resp = await fetch(new URL('/test', ENDPOINT), {
+					method: 'POST',
+					mode: 'cors',
+					headers: new Headers({
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					}),
+					body: JSON.stringify(this),
+				});
+				const data = await resp.json();
+				code.textContent = JSON.stringify(data, null, 2);
 				pre.append(code);
 				toast.append(pre);
 				document.body.append(toast);

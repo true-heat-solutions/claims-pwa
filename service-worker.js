@@ -1,11 +1,12 @@
 'use strict';
 
 const config = {
-	version: '1.0.0-a6',
+	version: '1.0.0-a7',
 	stale: [
 		'/',
 		'/users.js',
 		'/js/index.js',
+		'/js/consts.js',
 		'/js/Router.js',
 		'/js/current-year.js',
 		'/components/pages/login.js',

@@ -1,4 +1,5 @@
 import Router from '/js/Router.js';
+import {ENDPOINT} from '/js/consts.js';
 import '../claim-item.js';
 import './claim.js';
 
@@ -23,10 +24,10 @@ class ClaimsPage extends HTMLElement {
 				});
 			});
 
-			let items = await ClaimsPage.items;
+			let items = await ClaimsPage.items || [];
 			if (location.hash.startsWith('#my-claims')) {
-				const user = localStorage.getItem('givenName');
-				items = items.filter(item => item.lead.name === user);
+				const user = localStorage.getItem('identifier');
+				items = items.filter(item => item.lead.identifier === user);
 			}
 			console.log(items);
 			await customElements.whenDefined('claim-item');
@@ -35,11 +36,10 @@ class ClaimsPage extends HTMLElement {
 				const el = new ClaimItem();
 				await el.ready;
 				el.uuid = item.uuid;
-				el.customer = item.customer.name;
+				el.customer = `${item.customer.givenName} ${item.customer.familyName}`;
 				el.status = item.status;
-				el.dataset.status = item.status;
 				el.classList.add('card');
-				el.date = item.opened;
+				el.date = item.created;
 				el.slot = 'claim';
 				return el;
 			}));
@@ -56,7 +56,9 @@ class ClaimsPage extends HTMLElement {
 
 	static get items() {
 		return new Promise(async (resolve, reject) => {
-			const url = new URL('claims.json', import.meta.url);
+			const url = new URL('./Claim/', ENDPOINT);
+			url.searchParams.set('token', localStorage.getItem('token'));
+
 			const resp = await fetch(url);
 			if (resp.ok) {
 				const items = await resp.json();

@@ -1,3 +1,4 @@
+import {ENDPOINT} from '/js/consts.js';
 import Router from '/js/Router.js';
 class ProfilePage extends HTMLElement {
 	constructor() {
@@ -12,13 +13,23 @@ class ProfilePage extends HTMLElement {
 
 			doc.forms.profile.addEventListener('submit', async event => {
 				event.preventDefault();
+				const resp = await fetch(new URL('/test', ENDPOINT), {
+					method: 'POST',
+					mode: 'cors',
+					headers: new Headers({
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					}),
+					body: JSON.stringify(this),
+				});
 				await customElements.whenDefined('toast-message');
+				const data = await resp.json();
 				const Toast = customElements.get('toast-message');
 				const toast = new Toast();
 				const pre = document.createElement('pre');
 				const code = document.createElement('code');
 				pre.slot = 'content';
-				code.textContent = JSON.stringify(this, null, 2);
+				code.textContent = JSON.stringify(data, null, 2);
 				pre.append(code);
 				toast.append(pre);
 				document.body.append(toast);
@@ -51,14 +62,17 @@ class ProfilePage extends HTMLElement {
 
 	toJSON() {
 		return {
-			givenName: this.get('givenName'),
-			familyName: this.get('familyName'),
-			password: {
-				current: this.get('password[current]'),
-				'new': this.get('password[new]'),
-				repeat: this.get('password[repeat]'),
-			},
-			telephone: this.get('telephone'),
+			token: localStorage.getItem('token'),
+			person: {
+				givenName: this.get('givenName'),
+				familyName: this.get('familyName'),
+				password: {
+					current: this.get('password[current]'),
+					'new': this.get('password[new]'),
+					repeat: this.get('password[repeat]'),
+				},
+				telephone: this.get('telephone'),
+			}
 		};
 	}
 }

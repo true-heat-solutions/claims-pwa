@@ -58,8 +58,9 @@ customElements.define('claim-item', class ClaimItemElement extends HTMLElement {
 	}
 
 	set status(val) {
-		this.shadowRoot.getElementById('container').dataset.status = val;
-		this.shadowRoot.querySelector('[name="status"]').value = val;
+		this.shadowRoot.getElementById('container').dataset.status = val.toLowerCase();
+		this.dataset.status = val.toLowerCase();
+		this.shadowRoot.querySelector('[name="status"]').value = val.toLowerCase();
 	}
 
 	get status() {

@@ -1,22 +1,37 @@
 import Router from '/js/Router.js';
+import {ENDPOINT} from '/js/consts.js';
 class ClaimPage extends HTMLElement {
 	constructor(uuid, mode = 'view') {
 		super();
 		this.attachShadow({mode: 'open'});
 
 		if (typeof uuid === 'string' && uuid !== 'new') {
-			fetch(new URL('claims.json', import.meta.url)).then(async resp => {
+			const url = new URL('/Claim/', ENDPOINT);
+			url.searchParams.set('uuid', uuid);
+			url.searchParams.set('token', localStorage.getItem('token'));
+
+			fetch(url, {
+				mode: 'cors',
+				headers: new Headers({Accept: 'application/json'}),
+			}).then(async resp => {
 				if (resp.ok) {
-					const claims = await resp.json();
-					const claim = claims.find(claim => claim.uuid === uuid);
+					const claim = await resp.json();
 					if (claim) {
 						await this.ready;
+						const opened = new Date(claim.created);
 						this.set('uuid', claim.uuid);
-						this.set('customer[name]', claim.customer.name);
+						this.set('customer[identifier]', claim.customer.identifier);
+						this.set('customer[givenName]', claim.customer.givenName);
+						this.set('customer[familyName]', claim.customer.familyName);
 						this.set('customer[telephone]', claim.customer.telephone);
-						this.set('contractor', claim.contractor.name);
-						this.set('lead', claim.lead.name);
-						this.set('opened', claim.opened);
+						this.set('contractor[givenName]', claim.contractor.givenName);
+						this.set('contractor[familyName]', claim.contractor.familyName);
+						this.set('contractor[identifier]', claim.contractor.identifier);
+						this.set('lead[givenName]', claim.lead.givenName);
+						this.set('lead[familyName]', claim.lead.familyName);
+						this.set('lead[identifier]', claim.lead.identifier);
+						this.set('opened', `${opened.getFullYear()}-${(opened.getMonth()+1).toString().padStart(2, '0')}-${opened.getDate().toString().padStart(2, '0')}`);
+						this.set('customer[address][identifier]', claim.customer.address.identifier);
 						this.set('customer[address][streetAddress]', claim.customer.address.streetAddress);
 						this.set('customer[address][addressLocality]', claim.customer.address.addressLocality);
 						this.set('customer[address][addressRegion]', claim.customer.address.addressRegion);
@@ -49,19 +64,38 @@ class ClaimPage extends HTMLElement {
 
 			doc.forms.claim.addEventListener('submit', async event => {
 				event.preventDefault();
+				const resp = await fetch(new URL('/test', ENDPOINT), {
+					mode: 'cors',
+					method: 'Post',
+					headers: new Headers({
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					}),
+					body: JSON.stringify(this),
+				});
+
 				await customElements.whenDefined('toast-message');
 				const Toast = customElements.get('toast-message');
 				const toast = new Toast();
-				const pre = document.createElement('pre');
-				const code = document.createElement('code');
-				pre.slot = 'content';
-				code.textContent = JSON.stringify(this, null, 2);
-				pre.append(code);
-				toast.append(pre);
-				document.body.append(toast);
-				await toast.show();
-				await toast.closed;
-				toast.remove();
+
+				if (resp.ok) {
+					const pre = document.createElement('pre');
+					const code = document.createElement('code');
+					const data = await resp.json();
+					pre.slot = 'content';
+					code.textContent = JSON.stringify(data, null, 2);
+					pre.append(code);
+					toast.append(pre);
+					document.body.append(toast);
+					await toast.show();
+					await toast.closed;
+					toast.remove();
+				} else {
+					const json = await resp.json();
+					if (json.hasOwnProperty('error')) {
+						await Toast.toast(`${json.error.message} [${json.error.code}]`);
+					}
+				}
 			});
 
 			frag.append(...doc.head.children, ...doc.body.children);
@@ -83,11 +117,15 @@ class ClaimPage extends HTMLElement {
 
 	toJSON() {
 		return {
+			token: localStorage.getItem('token'),
 			uuid: this.get('uuid'),
 			customer: {
-				name: this.get('customer[name]'),
+				identifier: this.get('customer[identifier]'),
+				givenName: this.get('customer[givenName]'),
+				familyName: this.get('customer[familyName]'),
 				telephone: this.get('customer[telephone]'),
 				address: {
+					identifier: this.get('customer[address][identifier]'),
 					streetAddress: this.get('customer[address][streetAddress]'),
 					addressLocality: this.get('customer[address][addressLocality]'),
 					addressRegion: this.get('customer[address][addressRegion]'),
@@ -96,10 +134,14 @@ class ClaimPage extends HTMLElement {
 				}
 			},
 			contractor: {
-				name: this.get('contractor')
+				identifier: this.get('contractor[identifier]'),
+				givenName: this.get('contractor[givenName]'),
+				familyName: this.get('contractor[familyName]'),
 			},
 			lead: {
-				name: this.get('lead'),
+				identifier: this.get('lead[identifier]'),
+				givenName: this.get('lead[givenName]'),
+				familyName: this.get('lead[familyName]'),
 			},
 			opened: this.get('opened'),
 		};
