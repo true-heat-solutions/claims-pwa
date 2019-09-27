@@ -124,7 +124,7 @@ class ClaimPage extends HTMLElement {
 			$('input[type="file"]', frag).change(async event => {
 				if (event.target.files.length === 1) {
 					const file = event.target.files.item(0);
-					const url = new URL('upload', ENDPOINT);
+					const url = new URL('upload/', ENDPOINT);
 					const body = new FormData();
 					body.set('token', localStorage.getItem('token'));
 					body.set('upload', file);
