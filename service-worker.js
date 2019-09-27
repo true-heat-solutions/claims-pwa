@@ -1,10 +1,9 @@
 'use strict';
 
 const config = {
-	version: '1.0.0-a9',
+	version: '1.0.0-a10',
 	stale: [
 		'/',
-		'/users.js',
 		'/js/index.js',
 		'/js/consts.js',
 		'/js/Router.js',
@@ -32,6 +31,8 @@ const config = {
 		'/components/pages/register.html',
 		'/components/pages/account.js',
 		'/components/pages/account.html',
+		'/components/pages/users.js',
+		'/components/pages/users.html',
 		'/components/pages/profile.js',
 		'/components/pages/profile.html',
 		'/components/app-footer.js',
@@ -45,6 +46,7 @@ const config = {
 		'/js/std-js/shims.js',
 		'/js/std-js/md5.js',
 		'/js/std-js/Notification.js',
+		'/js/std-js/asyncDialog.js',
 		'/js/std-js/webShareApi.js',
 		'/js/std-js/esQuery.js',
 		'/js/std-js/functions.js',
