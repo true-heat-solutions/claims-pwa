@@ -19,7 +19,7 @@ class RegisterPage extends HTMLElement {
 				const pre = document.createElement('pre');
 				const code = document.createElement('code');
 				pre.slot = 'content';
-				const resp = await fetch(new URL('/test', ENDPOINT), {
+				const resp = await fetch(new URL('/user/', ENDPOINT), {
 					method: 'POST',
 					mode: 'cors',
 					headers: new Headers({
@@ -44,11 +44,7 @@ class RegisterPage extends HTMLElement {
 	}
 
 	toJSON() {
-		const person = Object.fromEntries(new FormData(this.shadowRoot.querySelector('form')).entries());
-		return {
-			token: localStorage.getItem('token'),
-			person,
-		};
+		return Object.fromEntries(new FormData(this.shadowRoot.querySelector('form')).entries());
 	}
 }
 

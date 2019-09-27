@@ -21,19 +21,17 @@
 				padding: 0;
 			}
 
-			input {
-				border: 0;
-				border-bottom: 1px solid #787878;
-			}
-
 			label {
 				margin: 0.4rem;
 			}
 
-			input {
+			input, select {
+				border: 0;
+				border-bottom: 1px solid #787878;
 				padding: 0.3rem;
 				margin: 0.1rem;
 				font-weight: bold;
+				background: inherit;
 			}
 
 			label > span {
@@ -59,9 +57,9 @@
 				<label class="block">
 					<span>Prime Contractor</span>
 					<br />
-					<input type="text" name="contractor[givenName]" />
-					<input type="text" name="contractor[familyName]" />
-					<input type="hidden" name="contractor[identifier]" />
+					<select class="person" name="contractor">
+						<option value="">Select contractor</option>
+					</select>
 				</label>
 				<label class="block">
 					<span>Date of claim</span>
@@ -87,9 +85,9 @@
 				<label class="block">
 					<span>Lead on Job</span>
 					<br />
-					<input type="text" name="lead[givenName]" />
-					<input type="text" name="lead[familyName]" />
-					<input type="hidden" name="lead[identifier]" />
+					<select class="person" name="lead">
+						<option value="">Select lead</option>
+					</select>
 				</label>
 				<br />
 				<div class="card shadow">

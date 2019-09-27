@@ -2,6 +2,24 @@ import Router from '/js/Router.js';
 import {ENDPOINT, ALLOWED_UPLOAD_TYPES} from '/js/consts.js';
 import {$} from '/js/std-js/functions.js';
 import '../attachment-el.js';
+
+async function listUsers(token) {
+	const url = new URL('users/', ENDPOINT);
+	url.searchParams.set('token', token);
+	const resp = await fetch(url, {
+		mode: 'cors',
+		headers: new Headers({
+			Accept: 'application/json',
+		}),
+	});
+
+	if (resp.ok) {
+		return await resp.json();
+	} else {
+		throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+	}
+}
+
 class ClaimPage extends HTMLElement {
 	constructor(uuid, mode = 'view') {
 		super();
@@ -26,12 +44,11 @@ class ClaimPage extends HTMLElement {
 						this.set('customer[givenName]', claim.customer.givenName);
 						this.set('customer[familyName]', claim.customer.familyName);
 						this.set('customer[telephone]', claim.customer.telephone);
-						this.set('contractor[givenName]', claim.contractor.givenName);
-						this.set('contractor[familyName]', claim.contractor.familyName);
-						this.set('contractor[identifier]', claim.contractor.identifier);
-						this.set('lead[givenName]', claim.lead.givenName);
-						this.set('lead[familyName]', claim.lead.familyName);
-						this.set('lead[identifier]', claim.lead.identifier);
+						this.set('contractor', claim.contractor.identifier);
+						// this.set('contractor[givenName]', claim.contractor.givenName);
+						// this.set('contractor[familyName]', claim.contractor.familyName);
+						// this.set('contractor[identifier]', claim.contractor.identifier);
+						this.set('lead', claim.lead.identifier);
 						this.set('opened', `${opened.getFullYear()}-${(opened.getMonth()+1).toString().padStart(2, '0')}-${opened.getDate().toString().padStart(2, '0')}`);
 						this.set('customer[address][identifier]', claim.customer.address.identifier);
 						this.set('customer[address][streetAddress]', claim.customer.address.streetAddress);
@@ -81,10 +98,18 @@ class ClaimPage extends HTMLElement {
 			const html = await resp.text();
 			const doc = parser.parseFromString(html, 'text/html');
 			const frag = document.createDocumentFragment();
+			const users = await listUsers(localStorage.getItem('token'));
+			const opts = users.reduce((users, user) => {
+				const opt = document.createElement('option');
+				opt.value = user.person.identifier;
+				opt.textContent = user.person.name;
+				users.append(opt);
+				return users;
+			}, document.createDocumentFragment());
 
 			doc.forms.claim.addEventListener('submit', async event => {
 				event.preventDefault();
-				const resp = await fetch(new URL('/test', ENDPOINT), {
+				const resp = await fetch(new URL('/Claim/', ENDPOINT), {
 					mode: 'cors',
 					method: 'Post',
 					headers: new Headers({
@@ -96,20 +121,10 @@ class ClaimPage extends HTMLElement {
 
 				await customElements.whenDefined('toast-message');
 				const Toast = customElements.get('toast-message');
-				const toast = new Toast();
 
 				if (resp.ok) {
-					const pre = document.createElement('pre');
-					const code = document.createElement('code');
 					const data = await resp.json();
-					pre.slot = 'content';
-					code.textContent = JSON.stringify(data, null, 2);
-					pre.append(code);
-					toast.append(pre);
-					document.body.append(toast);
-					await toast.show();
-					await toast.closed;
-					toast.remove();
+					await Toast.toast(data.message);
 				} else {
 					const json = await resp.json();
 					if (json.hasOwnProperty('error')) {
@@ -119,6 +134,9 @@ class ClaimPage extends HTMLElement {
 			});
 
 			frag.append(...doc.head.children, ...doc.body.children);
+
+			$('select.person', frag).each(sel => sel.append(opts.cloneNode(true)));
+
 
 			$('input[type="file"]', frag).attr({accept: ALLOWED_UPLOAD_TYPES.join(', ')});
 			$('input[type="file"]', frag).change(async event => {
@@ -193,16 +211,8 @@ class ClaimPage extends HTMLElement {
 					addressCountry: this.get('customer[address][addressCountry]'),
 				}
 			},
-			contractor: {
-				identifier: this.get('contractor[identifier]'),
-				givenName: this.get('contractor[givenName]'),
-				familyName: this.get('contractor[familyName]'),
-			},
-			lead: {
-				identifier: this.get('lead[identifier]'),
-				givenName: this.get('lead[givenName]'),
-				familyName: this.get('lead[familyName]'),
-			},
+			contractor: this.get('contractor'),
+			lead: this.get('lead'),
 			opened: this.get('opened'),
 		};
 	}
