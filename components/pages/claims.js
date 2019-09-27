@@ -36,7 +36,7 @@ class ClaimsPage extends HTMLElement {
 				const el = new ClaimItem();
 				await el.ready;
 				el.uuid = item.uuid;
-				el.customer = `${item.customer.givenName} ${item.customer.familyName}`;
+				el.customer = item.customer.name;
 				el.status = item.status;
 				el.classList.add('card');
 				el.date = item.created;

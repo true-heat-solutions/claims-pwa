@@ -1,7 +1,7 @@
 'use strict';
 
 const config = {
-	version: '1.0.0-a7',
+	version: '1.0.0-a8',
 	stale: [
 		'/',
 		'/users.js',
@@ -17,6 +17,10 @@ const config = {
 		'/components/toast-message.html',
 		'/components/claim-item.js',
 		'/components/claim-item.html',
+		'/components/attachment-el.js',
+		'/components/attachment-el.html',
+		'/components/user-el.js',
+		'/components/user-el.html',
 		'/components/pages/claims.js',
 		'/components/pages/claims.html',
 		'/components/pages/claims.json',

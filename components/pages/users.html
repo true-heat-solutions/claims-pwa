@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			@import url("/css/core-css/element.css");
+			@import url("/css/core-css/class-rules.css");
+			@import url("/css/styles/common.css");
+
+			:host {
+				display: block;
+				position: relative;
+			}
+
+			[data-click="create"] {
+				bottom: 1.3rem;
+				right: 1.3rem;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="sticky top shadow background-accent color-alt clearfix">
+			<back-button class="float-left"></back-button>
+			<h3 class="center">Users</h3>
+		</header>
+		<ul class="user-list">
+		</ul>
+		<button type="button" class="absolute btn btn-primary round shadow" title="Create User" data-click="create">
+			<slot name="create-user-btn">
+				<svg class="current-color icon" viewBox="0 0 12 16">
+					<path fill-rule="evenodd" d="M12 9H7v5H5V9H0V7h5V2h2v5h5v2z"/>
+				</svg>
+			</slot>
+		</button>
+	</body>
+</html>

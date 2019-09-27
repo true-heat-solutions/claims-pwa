@@ -1,3 +1,6 @@
+import {confirm, alert} from '/js/std-js/asyncDialog.js';
+import {ENDPOINT} from '/js/consts.js';
+
 customElements.define('claim-item', class ClaimItemElement extends HTMLElement {
 	constructor() {
 		super();
@@ -10,9 +13,42 @@ customElements.define('claim-item', class ClaimItemElement extends HTMLElement {
 			doc.querySelector('.edit-btn-container').addEventListener('click', () => this.edit());
 			const frag = document.createDocumentFragment();
 			frag.append(...doc.head.children, ...doc.body.children);
-			frag.querySelector('[name="status"]').addEventListener('change', event => {
-				this.shadowRoot.getElementById('container').dataset.status = event.target.value;
-				this.dataset.status = event.target.value;
+			frag.querySelector('[name="status"]').addEventListener('change', async event => {
+				const el = event.target;
+				if (await confirm(`Are you sure you want to change the status to ${el.value}?`)) {
+					try {
+						const body = JSON.stringify({
+							token: localStorage.getItem('token'),
+							uuid: this.uuid,
+							status: this.status,
+						});
+						const url = new URL('/Claim/', ENDPOINT);
+						const headers = new Headers({
+							Accept: 'application/json',
+							'Content-Type': 'application/json',
+						});
+						const resp = await fetch(url, {
+							method: 'POST',
+							mode: 'cors',
+							headers,
+							body,
+						});
+
+						if (resp.ok) {
+							this.shadowRoot.getElementById('container').dataset.status = el.value;
+							this.dataset.status = el.value;
+						} else {
+							throw new Error('Claim status update failed');
+						}
+					} catch (err) {
+						el.value = this.dataset.status;
+						alert('There was an error updating claim status');
+						console.error(err);
+					}
+
+				} else {
+					el.value = this.dataset.status;
+				}
 			}, {
 				passive: true,
 			});

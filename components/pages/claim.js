@@ -1,5 +1,7 @@
 import Router from '/js/Router.js';
-import {ENDPOINT} from '/js/consts.js';
+import {ENDPOINT, ALLOWED_UPLOAD_TYPES} from '/js/consts.js';
+import {$} from '/js/std-js/functions.js';
+import '../attachment-el.js';
 class ClaimPage extends HTMLElement {
 	constructor(uuid, mode = 'view') {
 		super();
@@ -37,6 +39,24 @@ class ClaimPage extends HTMLElement {
 						this.set('customer[address][addressRegion]', claim.customer.address.addressRegion);
 						this.set('customer[address][postalCode]', claim.customer.address.postalCode);
 						this.set('customer[address][addressCountry]', claim.customer.address.addressCountry);
+						if (Array.isArray(claim.attachments)) {
+							console.table(claim.attachments);
+							await customElements.whenDefined('attachment-el');
+							const HTMLAttachmentElement = customElements.get('attachment-el');
+							const attachments = await Promise.all(claim.attachments.map(async file => {
+								const attached = new HTMLAttachmentElement();
+								await attached.ready;
+								attached.href = new URL(file.path, ENDPOINT);
+								attached.slot = 'attachments';
+								attached.mime = file.mime;
+								attached.uuid = file.uuid;
+								attached.name = file.path.split('/').pop();
+								console.info(attached);
+								return attached;
+							}));
+							this.append(...attachments);
+						}
+
 						if (mode === 'edit') {
 							this.edit = true;
 							this.pageName = 'Edit Claim';
@@ -99,6 +119,46 @@ class ClaimPage extends HTMLElement {
 			});
 
 			frag.append(...doc.head.children, ...doc.body.children);
+
+			$('input[type="file"]', frag).attr({accept: ALLOWED_UPLOAD_TYPES.join(', ')});
+			$('input[type="file"]', frag).change(async event => {
+				if (event.target.files.length === 1) {
+					const file = event.target.files.item(0);
+					const url = new URL('upload', ENDPOINT);
+					const body = new FormData();
+					body.set('token', localStorage.getItem('token'));
+					body.set('upload', file);
+					body.set('claim', this.get('uuid'));
+					const resp = await fetch(url, {
+						method: 'POST',
+						mode: 'cors',
+						body,
+					});
+
+					if (resp.ok) {
+						this.value = '';
+						const json = await resp.json();
+						console.log(json);
+						await customElements.whenDefined('attachment-el');
+						const HTMLAttachemntElement = customElements.get('attachment-el');
+						const attached  = new HTMLAttachemntElement();
+						await attached.ready;
+						attached.href = new URL(json.path, ENDPOINT);
+						attached.slot = 'attachments';
+						attached.mime = json.mime;
+						attached.uuid = json.uuid;
+						attached.name = json.path.split('/').pop();
+
+						console.log(json);
+						this.append(attached);
+					} else {
+						const json = await resp.json();
+						if (json.hasOwnProperty('error')) {
+							console.error(json.error);
+						}
+					}
+				}
+			});
 
 			this.shadowRoot.append(frag);
 			this.dispatchEvent(new Event('ready'));

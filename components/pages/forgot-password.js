@@ -14,29 +14,42 @@ class ForgotPasswordPage extends HTMLElement {
 
 			doc.forms.forgotPassword.addEventListener('submit', async event => {
 				event.preventDefault();
-				await customElements.whenDefined('toast-message');
-				const Toast = customElements.get('toast-message');
-				const toast = new Toast();
-				const pre = document.createElement('pre');
-				const code = document.createElement('code');
-				pre.slot = 'content';
-				const resp = await fetch(new URL('/test', ENDPOINT), {
+				const resp = await fetch(new URL('/forgot/', ENDPOINT), {
 					method: 'POST',
 					mode: 'cors',
 					headers: new Headers({
 						Accept: 'application/json',
-						'Content-Type': 'application/json',
 					}),
-					body: JSON.stringify(this),
+					body: new FormData(event.target),
 				});
-				const data = await resp.json();
-				code.textContent = JSON.stringify(data, null, 2);
-				pre.append(code);
-				toast.append(pre);
-				document.body.append(toast);
-				await toast.show();
-				await toast.closed;
-				toast.remove();
+
+				if (resp.ok) {
+					const data = await resp.json();
+					await customElements.whenDefined('toast-message');
+					const Toast = customElements.get('toast-message');
+					const toast = new Toast();
+					const msg = document.createElement('div');
+					const title = document.createElement('h3');
+					const p = document.createElement('p');
+					const img = new Image();
+					img.height = 64;
+					img.width = 64;
+					msg.classList.add('center');
+					img.decoding = 'async';
+					img.src = new URL(data.notification.icon, document.baseURI);
+					title.textContent = data.notification.title;
+					p.textContent = data.notification.body;
+					msg.append(title, img, p);
+					msg.slot = 'content';
+					toast.append(msg);
+					document.body.append(toast);
+					await toast.show();
+					await toast.closed;
+					toast.remove();
+				} else {
+					throw new Error(`${resp.url} [${resp.status} ${resp.statusText}`);
+				}
+
 			});
 			frag.append(...doc.head.children, ...doc.body.children);
 

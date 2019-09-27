@@ -92,6 +92,11 @@
 					<input type="hidden" name="lead[identifier]" />
 				</label>
 				<br />
+				<div class="card shadow">
+					<input type="file" name="attachment" accept="image/*" />
+				</div>
+				<slot name="attachments" class="block">
+				</slot>
 				<div class="center">
 					<button type="submit" class="btn btn-accept btn-round btn-wide"><slot name="btnLabel">Start</slot></button>
 				</div>
