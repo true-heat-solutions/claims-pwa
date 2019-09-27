@@ -13,7 +13,7 @@ class HTMLAttachmentElement extends HTMLElement {
 			frag.append(...doc.head.children, ...doc.body.children);
 			frag.querySelector('[data-click="delete"]').addEventListener('click', async () => {
 				if (await confirm('Delete this attachment?')) {
-					const url = new URL('/upload', ENDPOINT);
+					const url = new URL('upload/', ENDPOINT);
 					url.searchParams.set('token', localStorage.getItem('token'));
 					url.searchParams.set('uuid', this.uuid);
 					const resp = await fetch(url, {
