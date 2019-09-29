@@ -65,6 +65,7 @@ class UsersPage extends HTMLElement {
 
 				if (resp.ok) {
 					const data = await resp.json();
+					event.target.reset();
 					console.info(data);
 				} else {
 					throw new Error(`${resp.url} ${resp.status} ${resp.statusText}`);
