@@ -1,3 +1,6 @@
+import {ENDPOINT} from '/js/consts.js';
+import {confirm} from '/js/std-js/asyncDialog.js';
+import {$} from '/js/std-js/functions.js';
 class HTMLUserElement extends HTMLElement {
 	constructor() {
 		super();
@@ -10,15 +13,67 @@ class HTMLUserElement extends HTMLElement {
 			const frag = document.createDocumentFragment();
 			frag.append(...doc.head.children, ...doc.body.children);
 
+			$('[data-click="delete"]', frag).click(async () => {
+				if (await confirm(`Are you sure you want to delete "${this.get('name')}"?`)) {
+					const url = new URL('/users/', ENDPOINT);
+					url.searchParams.set('token', localStorage.getItem('token'));
+					url.searchParams.set('uuid', this.uuid);
+
+					const resp = await fetch(url, {
+						method: 'DELETE',
+						mode: 'cors',
+					});
+
+					if (resp.ok) {
+						this.remove();
+					} else {
+						throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+					}
+
+				}
+			});
+
 			this.shadowRoot.append(frag);
 		});
 	}
 
-	set name(val) {
-		const el = document.createElement('span');
-		el.slot = 'name';
-		el.textContent = val;
+	get uuid() {
+		return this.getAttribute('uuid');
+	}
+
+	set uuid(val) {
+		this.setAttribute('uuid', val);
+	}
+
+	get(name, attr = 'text') {
+		const slot = this.shadowRoot.querySelector(`slot[name="${name}"]`);
+		if (slot instanceof HTMLElement) {
+			const nodes = slot.assignedNodes();
+			if (nodes.length === 1) {
+				return attr === 'text' ? nodes[0].textContent : nodes[0].getAttribute(attr);
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+
+	set(name, value, {
+		tag = 'span',
+		attr = 'text',
+	} = {}) {
+		const el = document.createElement(tag);
+
+		if (attr === 'text') {
+			el.textContent = value;
+		} else {
+			el.setAttribute(attr, value);
+		}
+
+		el.slot = name;
 		this.append(el);
+		return el;
 	}
 
 	set role(val) {

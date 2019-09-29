@@ -1,6 +1,6 @@
 import {ENDPOINT} from '/js/consts.js';
 
-customElements.define('user-select', class HTMLUserSelectElement extends HTMLELement {
+customElements.define('user-select', class HTMLUserSelectElement extends HTMLElement {
 	constructor() {
 		super();
 		this.append(document.createElement('select'));
