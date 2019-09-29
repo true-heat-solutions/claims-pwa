@@ -2,7 +2,7 @@ import Router from '/js/Router.js';
 import '../user-el.js';
 import {ENDPOINT} from '/js/consts.js';
 import {$} from '/js/std-js/functions.js';
-import {await} from '/js/std-js/asyncDialog.js';
+import {alert} from '/js/std-js/asyncDialog.js';
 
 async function getRoles() {
 	const resp = await fetch(new URL('/Roles/', ENDPOINT), {
