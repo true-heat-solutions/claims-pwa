@@ -76,7 +76,7 @@ class UsersPage extends HTMLElement {
 			});
 
 			this.shadowRoot.append(frag);
-			const url = new URL('users', ENDPOINT);
+			const url = new URL('users/', ENDPOINT);
 			url.searchParams.set('token', localStorage.getItem('token'));
 			const userResp = await fetch(url, {mode: 'cors'});
 			const users = await userResp.json();
