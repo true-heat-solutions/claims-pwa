@@ -55,17 +55,18 @@ class UsersPage extends HTMLElement {
 
 			$('form[name="createUser"]', frag).submit(async event => {
 				event.preventDefault();
+				const target = event.target;
 				const resp = await fetch(new URL('/users/', ENDPOINT), {
 					method: 'POST',
 					mode: 'cors',
-					body: new FormData(event.target),
+					body: new FormData(target),
 					headers: new Headers({
 						Accept: 'application/json',
 					}),
 				});
 
 				if (resp.ok) {
-					event.target.reset();
+					target.reset();
 					await alert('New user created');
 				} else {
 					throw new Error(`${resp.url} ${resp.status} ${resp.statusText}`);
