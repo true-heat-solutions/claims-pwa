@@ -2,6 +2,7 @@ import Router from '/js/Router.js';
 import '../user-el.js';
 import {ENDPOINT} from '/js/consts.js';
 import {$} from '/js/std-js/functions.js';
+import {await} from '/js/std-js/asyncDialog.js';
 
 async function getRoles() {
 	const resp = await fetch(new URL('/Roles/', ENDPOINT), {
@@ -64,9 +65,8 @@ class UsersPage extends HTMLElement {
 				});
 
 				if (resp.ok) {
-					const data = await resp.json();
 					event.target.reset();
-					console.info(data);
+					await alert('New user created');
 				} else {
 					throw new Error(`${resp.url} ${resp.status} ${resp.statusText}`);
 				}
