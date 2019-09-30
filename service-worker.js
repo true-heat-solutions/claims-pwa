@@ -1,7 +1,7 @@
 'use strict';
 
 const config = {
-	version: '1.0.0-a19',
+	version: '1.0.0-a20',
 	stale: [
 		'/',
 		'/js/index.js',

@@ -3,21 +3,7 @@ import '../user-el.js';
 import {ENDPOINT} from '/js/consts.js';
 import {$} from '/js/std-js/functions.js';
 import {alert} from '/js/std-js/asyncDialog.js';
-
-async function getRoles() {
-	const resp = await fetch(new URL('/Roles/', ENDPOINT), {
-		mode: 'cors',
-		headers: new Headers({
-			Accept: 'application/json',
-		}),
-	});
-
-	if (resp.ok) {
-		return await resp.json();
-	} else {
-		throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
-	}
-}
+import {getRoles} from '/js/functions.js';
 
 class UsersPage extends HTMLElement {
 	constructor() {

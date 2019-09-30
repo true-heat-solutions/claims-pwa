@@ -33,6 +33,10 @@ class HTMLUserElement extends HTMLElement {
 				}
 			});
 
+			$('[data-click="edit"]', frag).click(() => {
+				location.hash = `#profile/${this.uuid}`;
+			});
+
 			this.shadowRoot.append(frag);
 		});
 	}
