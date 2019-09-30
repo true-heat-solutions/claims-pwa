@@ -13,29 +13,31 @@ class RegisterPage extends HTMLElement {
 
 			doc.forms.register.addEventListener('submit', async event => {
 				event.preventDefault();
+
 				await customElements.whenDefined('toast-message');
 				const Toast = customElements.get('toast-message');
-				const toast = new Toast();
-				const pre = document.createElement('pre');
-				const code = document.createElement('code');
-				pre.slot = 'content';
-				const resp = await fetch(new URL('/user/', ENDPOINT), {
-					method: 'POST',
-					mode: 'cors',
-					headers: new Headers({
-						Accept: 'application/json',
-						'Content-Type': 'application/json',
-					}),
-					body: JSON.stringify(this),
-				});
-				const data = await resp.json();
-				code.textContent = JSON.stringify(data, null, 2);
-				pre.append(code);
-				toast.append(pre);
-				document.body.append(toast);
-				await toast.show();
-				await toast.closed;
-				toast.remove();
+				await Toast.toast('Registration is currently disabled. Please ask a manger to create your account.');
+				// const toast = new Toast();
+				// const pre = document.createElement('pre');
+				// const code = document.createElement('code');
+				// pre.slot = 'content';
+				// const resp = await fetch(new URL('/user/', ENDPOINT), {
+				// 	method: 'POST',
+				// 	mode: 'cors',
+				// 	headers: new Headers({
+				// 		Accept: 'application/json',
+				// 		'Content-Type': 'application/json',
+				// 	}),
+				// 	body: JSON.stringify(this),
+				// });
+				// const data = await resp.json();
+				// code.textContent = JSON.stringify(data, null, 2);
+				// pre.append(code);
+				// toast.append(pre);
+				// document.body.append(toast);
+				// await toast.show();
+				// await toast.closed;
+				// toast.remove();
 			});
 			frag.append(...doc.head.children, ...doc.body.children);
 
