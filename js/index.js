@@ -23,6 +23,10 @@ import '../components/back-button.js';
 import './routes.js';
 import {$, ready, registerServiceWorker} from './std-js/functions.js';
 
+if (! (Element.prototype.animate instanceof Function)) {
+	Element.prototype.animate = () => null;
+}
+
 if (! navigator.hasOwnProperty('connection')) {
 
 	navigator.connection = {
