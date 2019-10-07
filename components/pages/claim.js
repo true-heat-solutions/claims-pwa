@@ -158,6 +158,7 @@ class ClaimPage extends HTMLElement {
 				if (resp.ok) {
 					const data = await resp.json();
 					await Toast.toast(data.message);
+					location.hash = '#claims';
 				} else {
 					const json = await resp.json();
 					if (json.hasOwnProperty('error')) {
