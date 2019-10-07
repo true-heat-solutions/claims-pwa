@@ -1,7 +1,7 @@
 'use strict';
 
 const config = {
-	version: '1.0.0-a27',
+	version: '1.0.0-a29',
 	stale: [
 		'/',
 		'/js/index.js',
@@ -20,6 +20,8 @@ const config = {
 		'/components/attachment-el.html',
 		'/components/user-el.js',
 		'/components/user-el.html',
+		'/components/claim-note.js',
+		'/components/claim-note.html',
 		'/components/pages/claims.js',
 		'/components/pages/claims.html',
 		'/components/pages/claims.json',

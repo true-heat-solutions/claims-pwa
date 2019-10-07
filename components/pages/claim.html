@@ -11,6 +11,12 @@
 				display: block;
 			}
 
+			::slotted(.btn.btn-wide.note-btn) {
+				border-radius: 22px;
+				background-color: #b3b8ff;
+				color: #484848;
+			}
+
 			legend {
 				width: 100%;
 				padding: 0.3rem;
@@ -40,65 +46,93 @@
 		</style>
 	</head>
 	<body>
-		<form name="claim">
-			<fieldset class="no-border">
-				<legend class="background-accent color-alt clearfix page-header">
-					<back-button class="float-left"></back-button>
-					<h3 class="center"><slot name="pageName">View Claim</slot></h3>
-				</legend>
-				<input type="hidden" name="uuid" />
-				<label class="block">
-					<span>Customer Name</span>
+		<div class="container">
+			<form name="claim">
+				<fieldset class="no-border">
+					<legend class="background-accent color-alt clearfix page-header">
+						<back-button class="float-left"></back-button>
+						<h3 class="center"><slot name="pageName">View Claim</slot></h3>
+					</legend>
+					<input type="hidden" name="uuid" />
+					<label class="block">
+						<span>Customer Name</span>
+						<br />
+						<input type="text" name="customer[givenName]" />
+						<input type="text" name="customer[familyName]" />
+						<input type="hidden" name="customer[identifier]" />
+					</label>
+					<label class="block">
+						<span>Prime Contractor</span>
+						<br />
+						<select class="person" name="contractor">
+							<option value="">Select contractor</option>
+						</select>
+					</label>
+					<label class="block">
+						<span>Date of claim</span>
+						<br />
+						<input type="date" name="opened" class="full-width" />
+					</label>
+					<label class="block">
+						<span>Customer address</span>
+						<br />
+						<input type="text" name="customer[address][streetAddress]" class="full-width inline-block" />
+						<br />
+						<input type="text" name="customer[address][addressLocality]" />
+						<input type="number" name="customer[address][postalCode]" min="10000" max="99999" class="zipcode" />
+						<input type="hidden" name="customer[address][addressRegion]" value="CA" />
+						<input type="hidden" name="customer[address][addressCountry]" value="US" />
+						<input type="hidden" name="customer[address][identifier]" />
+					</label>
+					<label class="block">
+						<span>Customer number</span>
+						<br />
+						<input type="tel" name="customer[telephone]" class="full-width" />
+					</label>
+					<label class="block">
+						<span>Lead on Job</span>
+						<br />
+						<select class="person" name="lead">
+							<option value="">Select lead</option>
+						</select>
+					</label>
 					<br />
-					<input type="text" name="customer[givenName]" />
-					<input type="text" name="customer[familyName]" />
-					<input type="hidden" name="customer[identifier]" />
-				</label>
-				<label class="block">
-					<span>Prime Contractor</span>
-					<br />
-					<select class="person" name="contractor">
-						<option value="">Select contractor</option>
-					</select>
-				</label>
-				<label class="block">
-					<span>Date of claim</span>
-					<br />
-					<input type="date" name="opened" class="full-width" />
-				</label>
-				<label class="block">
-					<span>Customer address</span>
-					<br />
-					<input type="text" name="customer[address][streetAddress]" class="full-width inline-block" />
-					<br />
-					<input type="text" name="customer[address][addressLocality]" />
-					<input type="number" name="customer[address][postalCode]" min="10000" max="99999" class="zipcode" />
-					<input type="hidden" name="customer[address][addressRegion]" value="CA" />
-					<input type="hidden" name="customer[address][addressCountry]" value="US" />
-					<input type="hidden" name="customer[address][identifier]" />
-				</label>
-				<label class="block">
-					<span>Customer number</span>
-					<br />
-					<input type="tel" name="customer[telephone]" class="full-width" />
-				</label>
-				<label class="block">
-					<span>Lead on Job</span>
-					<br />
-					<select class="person" name="lead">
-						<option value="">Select lead</option>
-					</select>
-				</label>
-				<br />
-				<div class="card shadow">
-					<input type="file" name="attachment" accept="image/*" />
-				</div>
-				<slot name="attachments" class="block">
-				</slot>
-				<div class="center">
-					<button type="submit" class="btn btn-accept btn-round btn-wide"><slot name="btnLabel">Start</slot></button>
-				</div>
-			</fieldset>
-		</form>
+					<section id="claim-notes" class="card shadow center">
+						<h3>Notes</h3>
+						<ul>
+							<slot name="notes"></slot>
+						</ul>
+						<button type="button" class="btn btn-accept btn-round btn-wide" data-click="new-note">
+							<slot name="new-note-label">New Note</slot>
+							<slot name="new-note-icon">
+								<svg class="current-color icon" viewBox="0 0 14 16">
+									<path fill-rule="evenodd" d="M3 10h4V9H3v1zm0-2h6V7H3v1zm0-2h8V5H3v1zm10 6H1V3h12v9zM1 2c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1H1z"/>
+								</svg>
+							</slot>
+						</button>
+					</section>
+					<section id="claim-attachments" class="card shadow">
+						<h3 class="center">Attachemnts</h3>
+						<slot name="attachments" class="block"></slot>
+						<div class="card shadow">
+							<input type="file" name="attachment" accept="image/*" />
+						</div>
+					</section>
+					<div class="center">
+						<button type="submit" class="btn btn-accept btn-round btn-wide"><slot name="btnLabel">Start</slot></button>
+					</div>
+				</fieldset>
+			</form>
+			<dialog id="new-note-dialog">
+				<form name="newNote">
+					<fieldset>
+						<legend class="center">New Note</legend>
+						<textarea name="text" placeholder="Note text" cols="80" rows="5" requierd=""></textarea>
+					</fieldset>
+					<button type="submit" class="btn btn-accept">Submit</button>
+					<button type="reset" class="btn btn-reject">Reject</button>
+				</form>
+			</dialog>
+		</div>
 	</body>
 </html>

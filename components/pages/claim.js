@@ -2,6 +2,7 @@ import Router from '/js/Router.js';
 import {ENDPOINT, ALLOWED_UPLOAD_TYPES} from '/js/consts.js';
 import {$} from '/js/std-js/functions.js';
 import '../attachment-el.js';
+import '../claim-note.js';
 
 async function listUsers(token) {
 	const url = new URL('users/', ENDPOINT);
@@ -39,6 +40,7 @@ class ClaimPage extends HTMLElement {
 					if (claim) {
 						await this.ready;
 						const opened = new Date(claim.created);
+						this.status = claim.status;
 						this.set('uuid', claim.uuid);
 						this.set('customer[identifier]', claim.customer.identifier);
 						this.set('customer[givenName]', claim.customer.givenName);
@@ -57,7 +59,6 @@ class ClaimPage extends HTMLElement {
 						this.set('customer[address][postalCode]', claim.customer.address.postalCode);
 						this.set('customer[address][addressCountry]', claim.customer.address.addressCountry);
 						if (Array.isArray(claim.attachments)) {
-							console.table(claim.attachments);
 							await customElements.whenDefined('attachment-el');
 							const HTMLAttachmentElement = customElements.get('attachment-el');
 							const attachments = await Promise.all(claim.attachments.map(async file => {
@@ -71,7 +72,39 @@ class ClaimPage extends HTMLElement {
 								console.info(attached);
 								return attached;
 							}));
+
 							this.append(...attachments);
+						}
+
+						if (Array.isArray(claim.notes)) {
+							await customElements.whenDefined('claim-note');
+							const ClaimNoteElement = customElements.get('claim-note');
+							const notes = await Promise.all(claim.notes.map(async note => {
+								const {text, uuid, created, author, status} = note;
+								const btn = document.createElement('button');
+								const li = document.createElement('li');
+								const el = new ClaimNoteElement();
+								await el.ready;
+
+								btn.type = 'button';
+								btn.classList.add('btn', 'btn-wide', 'note-btn');
+								btn.slot = 'notes';
+								btn.textContent = `${new Date(note.created).toLocaleDateString()} ${note.status}`;
+
+								li.slot = 'notes';
+								li.append(el);
+
+								el.text = text;
+								el.uuid = uuid;
+								el.create = created;
+								el.author = author.name;
+								el.status = status;
+
+								btn.dataset.noteUuid = el.uuid;
+								btn.addEventListener('click', () => el.showModal());
+								return [li, btn];
+							}));
+							this.append(...notes.flat());
 						}
 
 						if (mode === 'edit') {
@@ -133,10 +166,55 @@ class ClaimPage extends HTMLElement {
 				}
 			});
 
+			doc.forms.newNote.addEventListener('submit', async event => {
+				event.preventDefault();
+				const {target} = event;
+				const data = new FormData(target);
+				const resp = await fetch(new URL('Note/', ENDPOINT), {
+					method: 'POST',
+					mode: 'cors',
+					headers: new Headers({
+						Accept: 'application/json',
+						'Content-Type': 'application/json',
+					}),
+					body: JSON.stringify({
+						token: localStorage.getItem('token'),
+						claim: this.get('uuid'),
+						text: data.get('text'),
+						status: this.status,
+					}),
+				});
+
+				if (resp.ok) {
+					target.reset();
+				} else {
+					throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+				}
+			});
+
+			doc.forms.newNote.addEventListener('reset', event => {
+				const dialog = event.target.closest('dialog[open]');
+				if (dialog instanceof HTMLElement) {
+					dialog.close();
+				}
+			});
+
 			frag.append(...doc.head.children, ...doc.body.children);
+
+			frag.querySelector('.container').classList.toggle('no-dialog', document.createElement('dialog') instanceof HTMLUnknownElement);
 
 			$('select.person', frag).each(sel => sel.append(opts.cloneNode(true)));
 
+			$('[data-click]', frag).click(async event => {
+				const target = event.target.closest('[data-click]');
+				switch(target.dataset.click) {
+				case 'new-note':
+					$('#new-note-dialog', this.shadowRoot).showModal();
+					break;
+				default:
+					throw new Error(`Unhandled click action: ${this.dataset.click}`);
+				}
+			});
 
 			$('input[type="file"]', frag).attr({accept: ALLOWED_UPLOAD_TYPES.join(', ')});
 			$('input[type="file"]', frag).change(async event => {
@@ -235,6 +313,14 @@ class ClaimPage extends HTMLElement {
 
 	set edit(edit) {
 		this.ready.then(this.shadowRoot.querySelector('fieldset').disabled = ! edit);
+	}
+
+	get status() {
+		return this.getAttribute('status');
+	}
+
+	set status(val) {
+		this.setAttribute('status', val);
 	}
 
 	set pageName(text) {
