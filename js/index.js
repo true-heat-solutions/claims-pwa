@@ -27,8 +27,7 @@ if (! (Element.prototype.animate instanceof Function)) {
 	Element.prototype.animate = () => null;
 }
 
-if (! navigator.hasOwnProperty('connection')) {
-
+if (! ('connection' in navigator)) {
 	navigator.connection = {
 		type: 'unknown',
 		effectiveType: '4g',

@@ -1,7 +1,7 @@
 'use strict';
 
 const config = {
-	version: '1.0.0-a29',
+	version: '1.0.0-a36',
 	stale: [
 		'/',
 		'/js/index.js',
@@ -77,48 +77,42 @@ const config = {
 		'/fonts/roboto.woff2',
 	].map(path => new URL(path, location.origin).href),
 	fresh: [
-		'https://cdn.polyfill.io/v2/polyfill.min.js?unknown=polyfill&features=es6,MutationObserver,IntersectionObserver,IntersectionObserverEntry,Object.values,Object.entries,NodeList.prototype.@@iterator,Array.prototype.@@iterator&flags=gated',
+		// 'https://cdn.polyfill.io/v2/polyfill.min.js?unknown=polyfill&features=es6,MutationObserver,IntersectionObserver,IntersectionObserverEntry,Object.values,Object.entries,NodeList.prototype.@@iterator,Array.prototype.@@iterator&flags=gated',
 		'https://unpkg.com/@webcomponents/custom-elements@1.2.4/custom-elements.min.js',
 	]
 };
 
-self.addEventListener('install', async () => {
-	try {
-		for (const key of await caches.keys()) {
-			await caches.delete(key);
-		}
+self.addEventListener('install', async event => {
+	event.waitUntil(
+		caches.open(config.version).then(async cache => {
+			try {
+				for (const key of await caches.keys()) {
+					await caches.delete(key);
+				}
 
-		const cache = await caches.open(config.version);
-		await cache.addAll(config.stale).catch(console.error);
-	} catch (err) {
-		console.error(err);
-	}
-
-	skipWaiting();
+				await cache.addAll(config.stale).catch(console.error);
+			} catch (err) {
+				console.error(err);
+			}
+		})
+	);
 });
 
-self.addEventListener('activate', event => {
-	event.waitUntil(async function() {
-		clients.claim();
-	}());
-});
+self.addEventListener('activate', event => event.waitUntil(clients.claim()));
 
 self.addEventListener('fetch', event => {
-	const url = new URL(event.request.url);
-	url.hash = '';
-	switch(event.request.method) {
-	case 'GET':
-		if (Array.isArray(config.stale) && config.stale.includes(url.href)) {
-			event.respondWith((async () => {
+	if (event.request.method === 'GET') {
+		event.respondWith((async () => {
+			const url = new URL(event.request.url);
+			url.hash = '';
+			if (Array.isArray(config.stale) && config.stale.includes(url.href)) {
 				const cached = await caches.match(url);
 				if (cached instanceof Response) {
 					return cached;
 				} else {
 					return await fetch(event.request);
 				}
-			})());
-		} else if (Array.isArray(config.fresh) && config.fresh.includes(url.href)) {
-			event.respondWith((async () => {
+			} else if (Array.isArray(config.fresh) && config.fresh.includes(url.href)) {
 				if (navigator.onLine) {
 					const resp = await fetch(url.href);
 					const cache = await caches.open(config.version);
@@ -129,9 +123,7 @@ self.addEventListener('fetch', event => {
 				} else {
 					return await caches.match(event.request);
 				}
-			})());
-		} else if (Array.isArray(config.allowed) && config.allowed.some(host => new URL(event.request.url).host === host)) {
-			event.respondWith((async () => {
+			} else if (Array.isArray(config.allowed) && config.allowed.some(host => new URL(event.request.url).host === host)) {
 				const resp = await caches.match(event.request);
 				if (resp instanceof Response) {
 					return resp;
@@ -143,7 +135,9 @@ self.addEventListener('fetch', event => {
 				} else {
 					return await fetch(event.request);
 				}
-			})());
-		}
+			} else {
+				return await fetch(event.request);
+			}
+		})());
 	}
 });
