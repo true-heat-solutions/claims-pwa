@@ -202,7 +202,7 @@ class ClaimPage extends HTMLElement {
 
 			frag.append(...doc.head.children, ...doc.body.children);
 
-			frag.querySelector('.container').classList.toggle('no-dialog', document.createElement('dialog') instanceof HTMLUnknownElement);
+			frag.querySelector('.page-container').classList.toggle('no-dialog', document.createElement('dialog') instanceof HTMLUnknownElement);
 
 			$('select.person', frag).each(sel => sel.append(opts.cloneNode(true)));
 
@@ -333,6 +333,23 @@ class ClaimPage extends HTMLElement {
 			this.shadowRoot.querySelector('slot[name="pageName"]').assignedElements().forEach(el => el.remove());
 			this.append(el);
 		});
+	}
+
+	async attributeChangedCallback(name, oldVal, newVal) {
+		await this.ready;
+		console.info({name, newVal});
+		switch(name) {
+		case 'status':
+			break;
+		default:
+			throw new Error(`Unhandled attribute change: ${name}`);
+		}
+	}
+
+	static get observedAttribute() {
+		return [
+			'status',
+		];
 	}
 }
 
