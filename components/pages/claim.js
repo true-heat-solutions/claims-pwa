@@ -58,6 +58,8 @@ class ClaimPage extends HTMLElement {
 						this.set('customer[address][addressRegion]', claim.customer.address.addressRegion);
 						this.set('customer[address][postalCode]', claim.customer.address.postalCode);
 						this.set('customer[address][addressCountry]', claim.customer.address.addressCountry);
+						this.set('price', claim.price || 0);
+						this.set('hours', claim.hours || 0);
 						if (Array.isArray(claim.attachments)) {
 							await customElements.whenDefined('attachment-el');
 							const HTMLAttachmentElement = customElements.get('attachment-el');
@@ -293,6 +295,8 @@ class ClaimPage extends HTMLElement {
 			contractor: this.get('contractor'),
 			lead: this.get('lead'),
 			opened: this.get('opened'),
+			hours: this.get('hours'),
+			price: this.get('price'),
 		};
 	}
 
@@ -333,6 +337,30 @@ class ClaimPage extends HTMLElement {
 			this.shadowRoot.querySelector('slot[name="pageName"]').assignedElements().forEach(el => el.remove());
 			this.append(el);
 		});
+	}
+
+	get hours() {
+		const input = this.shadowRoot.querySelector('[name="hours"]');
+		return input instanceof HTMLInputElement ? input.value : null;
+	}
+
+	set hours(val) {
+		const input = this.shadowRoot.querySelector('input[name="hours"]');
+		if (input instanceof HTMLElement) {
+			input.value = val;
+		}
+	}
+
+	get price() {
+		const input = this.shadowRoot.querySelector('[name="price"]');
+		return input instanceof HTMLInputElement ? input.value : null;
+	}
+
+	set prive(val) {
+		const input = this.shadowRoot.querySelector('input[name="price"]');
+		if (input instanceof HTMLElement) {
+			input.value = val;
+		}
 	}
 
 	async attributeChangedCallback(name, oldVal, newVal) {
