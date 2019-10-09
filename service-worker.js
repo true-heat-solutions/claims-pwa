@@ -1,11 +1,12 @@
 'use strict';
 
 const config = {
-	version: '1.0.0-a38',
+	version: '1.0.0-a41',
 	stale: [
 		'/',
 		'/js/index.js',
 		'/js/consts.js',
+		'/js/functions.js',
 		'/js/Router.js',
 		'/js/current-year.js',
 		'/components/pages/login.js',
@@ -83,19 +84,18 @@ const config = {
 };
 
 self.addEventListener('install', async event => {
-	event.waitUntil(
-		caches.open(config.version).then(async cache => {
-			try {
-				for (const key of await caches.keys()) {
-					await caches.delete(key);
-				}
-
-				await cache.addAll(config.stale).catch(console.error);
-			} catch (err) {
-				console.error(err);
+	event.waitUntil((async () => {
+		try {
+			for (const key of await caches.keys()) {
+				await caches.delete(key);
 			}
-		})
-	);
+
+			const cache = await caches.open(config.version);
+			await cache.addAll(config.stale).catch(console.error);
+		} catch (err) {
+			console.error(err);
+		}
+	})());
 });
 
 self.addEventListener('activate', event => event.waitUntil(clients.claim()));

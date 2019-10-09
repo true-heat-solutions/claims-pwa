@@ -4,6 +4,17 @@
 	position: relative;
 }
 
+.page-container {
+	margin: 0;
+	padding: 0;
+	max-width: 100%;
+	min-height: 100vh;
+}
+
+.page-header {
+	padding: 0.3rem;
+}
+
 input[hidden] + label[for].btn-toggle {
 	background-color: var(--button-disabled-background);
 	margin: 0.3rem;

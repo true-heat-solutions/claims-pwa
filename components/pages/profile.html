@@ -24,12 +24,12 @@
 		</style>
 	</head>
 	<body>
-		<form name="profile" class="center">
+		<form name="profile" class="center page-container">
 			<legend class="clearfix background-accent color-alt page-header">
 				<back-button class="float-left"></back-button>
 				<h3 class="center no-margins"><slot name="legend">Edit Account</slot></h3>
 				</legend>
-			<logo-img></logo-img>
+			<slot name="image"><logo-img></logo-img></slot>
 			<error-message></error-message>
 			<div class="input-group">
 				<label for="login-given-name">
