@@ -85,7 +85,7 @@
 						<input type="hidden" name="customer[address][identifier]" />
 					</label>
 					<label class="block">
-						<span>Customer number</span>
+						<span>Customer Phone Number</span>
 						<br />
 						<input type="tel" name="customer[telephone]" class="full-width" />
 					</label>
@@ -98,11 +98,11 @@
 					</label>
 					<label class="block">
 						<span>Hours</span>
-						<input type="number" name="hours" value="0" min="0" step="0.25" readonly="" required="" />
+						<input type="number" name="hours" value="0" min="0" step="0.25" required="" />
 					</label>
 					<label class="block">
-						<span>Prive</span>
-						<input type="number" name="price" value="0" min="0" step="0.01" readonly="" required="" />
+						<span>Price</span>
+						<input type="number" name="price" value="0" min="0" step="0.01" required="" />
 					</label>
 					<br />
 					<section id="claim-notes" class="card shadow center">
@@ -120,7 +120,7 @@
 						</button>
 					</section>
 					<section id="claim-attachments" class="card shadow">
-						<h3 class="center">Attachemnts</h3>
+						<h3 class="center">Attachments</h3>
 						<slot name="attachments" class="block"></slot>
 						<div class="card shadow">
 							<input type="file" name="attachment" accept="image/*" />

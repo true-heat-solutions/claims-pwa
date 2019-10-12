@@ -47,7 +47,7 @@
     "fix:css": "stylelint ${npm_package_config_dir_css} --fix",
     "fix:js": "eslint ${npm_package_config_dir_js} --fix",
     "netlify:deploy": "netlify deploy",
-    "netlify:serve": "netlify dev -d ${npm_package_config_serve_path} --targetPort=${npm_package_config_serve_port}",
+    "netlify:serve": "netlify dev",
     "netlify:live": "netlify dev --live"
   },
   "dependencies": {

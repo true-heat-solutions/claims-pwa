@@ -5,6 +5,8 @@
   command = "npm run build"
   [build.environment]
     GIT_LFS_ENABLED = "1"
+[dev]
+  targetPort = 8000
 [[headers]]
   for="/*"
   [headers.values]
