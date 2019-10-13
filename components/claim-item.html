@@ -13,11 +13,11 @@
 			}
 
 			.grid {
-				grid-template-areas: "customer . ."
-					". status btn"
-					"date . .";
-				grid-template-columns: 5fr 3fr 2rem;
-				grid-template-rows: 1.3rem 1.3rem 1.3rem;
+				grid-template-areas: "customer assigned ."
+					". . edit"
+					"date status .";
+				grid-template-columns: 5fr 3fr 3.2rem;
+				grid-template-rows: 2rem;
 			}
 
 			[name="status"] {
@@ -42,6 +42,10 @@
 				grid-area: customer;
 			}
 
+			slot[name="assigned"] {
+				grid-area: assigned;
+			}
+
 			slot[name="date"], ::slotted([slot="date"]) {
 				grid-area: date;
 			}
@@ -50,27 +54,26 @@
 				color: #eea452;
 			}
 
-			.edit-btn-container {
-				grid-area: btn;
-				font-size: 3rem;
+			slot[name="edit-btn"] {
+				grid-area: edit;
 			}
 		</style>
 	</head>
 	<body>
-		<div id="container" class="grid row no-wrap">
+		<div id="container" class="grid row no-wrap card">
 			<slot name="customer">Unknown Customer</slot>
+			<slot name="assigned">Unassigned</slot>
+			<slot name="edit-btn" class="inline-block edit-btn-container">
+				<svg id="edit-btn" class="current-color icon cursor-pointer" viewBox="0 0 8 16">
+					<path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/>
+				</svg>
+			</slot>
 			<slot name="date">Invalid Date</slot>
 			<select name="status">
 				<option value="open">Open</option>
 				<option value="progress">In Progress</option>
 				<option value="closed">Closed</option>
 			</select>
-			<span class="edit-btn-container">
-				<svg id="edit-btn" class="current-color icon cursor-pointer" viewBox="0 0 8 16">
-					<path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/>
-				</svg>
-			</span>
 		</div>
-		<hr />
 	</body>
 </html>

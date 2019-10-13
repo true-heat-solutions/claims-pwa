@@ -82,6 +82,15 @@ customElements.define('claim-item', class ClaimItemElement extends HTMLElement {
 		this.append(el);
 	}
 
+	set assigned(val) {
+		if (val !== null) {
+			const el = document.createElement('span');
+			el.slot = 'assigned';
+			el.textContent = val;
+			this.append(el);
+		}
+	}
+
 	set date(val) {
 		if (! (val instanceof Date)) {
 			val = new Date(val);

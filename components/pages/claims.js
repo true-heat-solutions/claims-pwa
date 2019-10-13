@@ -25,11 +25,12 @@ class ClaimsPage extends HTMLElement {
 			});
 
 			let items = await ClaimsPage.items || [];
+
 			if (location.hash.startsWith('#my-claims')) {
 				const user = localStorage.getItem('identifier');
 				items = items.filter(item => item.lead.identifier === user);
 			}
-			console.log(items);
+
 			await customElements.whenDefined('claim-item');
 			const ClaimItem = customElements.get('claim-item');
 			const els = await Promise.all(items.map(async item => {
@@ -38,7 +39,7 @@ class ClaimsPage extends HTMLElement {
 				el.uuid = item.uuid;
 				el.customer = item.customer.name;
 				el.status = item.status;
-				el.classList.add('card');
+				el.assigned = item.assigned;
 				el.date = item.created;
 				el.slot = 'claim';
 				return el;
