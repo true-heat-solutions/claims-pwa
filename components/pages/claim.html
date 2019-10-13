@@ -55,6 +55,15 @@
 					</legend>
 					<input type="hidden" name="uuid" />
 					<label class="block">
+						<span>Assigned To</span>
+						<br />
+						<select name="assigned" class="name">
+							<option value="">Pick User</option>
+							<option value="b40f4421-d529-43f2-904a-c8b6651d5488">Paul Duncan</option>
+							<option value="32f46809-d72a-4866-9015-03d25e26f990">Chris Zuber</option>
+						</select>
+					</label>
+					<label class="block">
 						<span>Customer Name</span>
 						<br />
 						<input type="text" name="customer[givenName]" />
@@ -65,7 +74,8 @@
 						<span>Prime Contractor</span>
 						<br />
 						<select class="person" name="contractor">
-							<option value="">Select contractor</option>
+							<option value="">Select Contractor</option>
+							<option value="Chris Zuber">Chris Zuber</option>
 						</select>
 					</label>
 					<label class="block">
@@ -92,9 +102,11 @@
 					<label class="block">
 						<span>Lead on Job</span>
 						<br />
-						<select class="person" name="lead">
-							<option value="">Select lead</option>
-						</select>
+						<input class="person" name="lead" list="leads-list" autocomplete="off" />
+						<datalist id="leads-list">
+							<option value="Chris Zuber"></option>
+							<option value="Paul Duncan"></option>
+						</datalist>
 					</label>
 					<label class="block">
 						<span>Hours</span>

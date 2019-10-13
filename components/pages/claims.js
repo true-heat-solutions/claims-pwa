@@ -28,18 +28,19 @@ class ClaimsPage extends HTMLElement {
 
 			if (location.hash.startsWith('#my-claims')) {
 				const user = localStorage.getItem('identifier');
-				items = items.filter(item => item.lead.identifier === user);
+				items = items.filter(item => item.assigned.identifier === user);
 			}
 
 			await customElements.whenDefined('claim-item');
 			const ClaimItem = customElements.get('claim-item');
 			const els = await Promise.all(items.map(async item => {
 				const el = new ClaimItem();
+				console.dir(item);
 				await el.ready;
 				el.uuid = item.uuid;
 				el.customer = item.customer.name;
 				el.status = item.status;
-				el.assigned = item.assigned;
+				el.assigned = item.assigned.name;
 				el.date = item.created;
 				el.slot = 'claim';
 				return el;

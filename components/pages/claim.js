@@ -4,22 +4,22 @@ import {$} from '/js/std-js/functions.js';
 import '../attachment-el.js';
 import '../claim-note.js';
 
-async function listUsers(token) {
-	const url = new URL('users/', ENDPOINT);
-	url.searchParams.set('token', token);
-	const resp = await fetch(url, {
-		mode: 'cors',
-		headers: new Headers({
-			Accept: 'application/json',
-		}),
-	});
+// async function listUsers(token) {
+// 	const url = new URL('users/', ENDPOINT);
+// 	url.searchParams.set('token', token);
+// 	const resp = await fetch(url, {
+// 		mode: 'cors',
+// 		headers: new Headers({
+// 			Accept: 'application/json',
+// 		}),
+// 	});
 
-	if (resp.ok) {
-		return await resp.json();
-	} else {
-		throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
-	}
-}
+// 	if (resp.ok) {
+// 		return await resp.json();
+// 	} else {
+// 		throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+// 	}
+// }
 
 class ClaimPage extends HTMLElement {
 	constructor(uuid, mode = 'view') {
@@ -42,15 +42,16 @@ class ClaimPage extends HTMLElement {
 						const opened = new Date(claim.created);
 						this.status = claim.status;
 						this.set('uuid', claim.uuid);
+						this.set('assigned', claim.assigned.uuid);
 						this.set('customer[identifier]', claim.customer.identifier);
 						this.set('customer[givenName]', claim.customer.givenName);
 						this.set('customer[familyName]', claim.customer.familyName);
 						this.set('customer[telephone]', claim.customer.telephone);
-						this.set('contractor', claim.contractor.identifier);
+						this.set('contractor', claim.contractor);
 						// this.set('contractor[givenName]', claim.contractor.givenName);
 						// this.set('contractor[familyName]', claim.contractor.familyName);
 						// this.set('contractor[identifier]', claim.contractor.identifier);
-						this.set('lead', claim.lead.identifier);
+						this.set('lead', claim.lead);
 						this.set('opened', `${opened.getFullYear()}-${(opened.getMonth()+1).toString().padStart(2, '0')}-${opened.getDate().toString().padStart(2, '0')}`);
 						this.set('customer[address][identifier]', claim.customer.address.identifier);
 						this.set('customer[address][streetAddress]', claim.customer.address.streetAddress);
@@ -133,14 +134,14 @@ class ClaimPage extends HTMLElement {
 			const html = await resp.text();
 			const doc = parser.parseFromString(html, 'text/html');
 			const frag = document.createDocumentFragment();
-			const users = await listUsers(localStorage.getItem('token'));
-			const opts = users.reduce((users, user) => {
+			// const users = await listUsers(localStorage.getItem('token'));
+			/*const opts = users.reduce((users, user) => {
 				const opt = document.createElement('option');
 				opt.value = user.person.identifier;
 				opt.textContent = user.person.name;
 				users.append(opt);
 				return users;
-			}, document.createDocumentFragment());
+			}, document.createDocumentFragment());*/
 
 			doc.forms.claim.addEventListener('submit', async event => {
 				event.preventDefault();
@@ -154,16 +155,13 @@ class ClaimPage extends HTMLElement {
 					body: JSON.stringify(this),
 				});
 
-				await customElements.whenDefined('toast-message');
-				const Toast = customElements.get('toast-message');
-
 				if (resp.ok) {
-					const data = await resp.json();
-					await Toast.toast(data.message);
 					location.hash = '#claims';
 				} else {
 					const json = await resp.json();
 					if (json.hasOwnProperty('error')) {
+						await customElements.whenDefined('toast-message');
+						const Toast = customElements.get('toast-message');
 						await Toast.toast(`${json.error.message} [${json.error.code}]`);
 					}
 				}
@@ -206,7 +204,7 @@ class ClaimPage extends HTMLElement {
 
 			frag.querySelector('.page-container').classList.toggle('no-dialog', document.createElement('dialog') instanceof HTMLUnknownElement);
 
-			$('select.person', frag).each(sel => sel.append(opts.cloneNode(true)));
+			// $('select.person', frag).each(sel => sel.append(opts.cloneNode(true)));
 
 			$('[data-click]', frag).click(async event => {
 				const target = event.target.closest('[data-click]');
@@ -278,6 +276,7 @@ class ClaimPage extends HTMLElement {
 		return {
 			token: localStorage.getItem('token'),
 			uuid: this.get('uuid'),
+			assigned: this.get('assigned'),
 			customer: {
 				identifier: this.get('customer[identifier]'),
 				givenName: this.get('customer[givenName]'),
@@ -302,7 +301,7 @@ class ClaimPage extends HTMLElement {
 
 	get(name) {
 		const input = this.shadowRoot.querySelector(`[name="${name}"]`);
-		return input instanceof HTMLElement ? input.value : null;
+		return input instanceof HTMLElement ? input.value || null : null;
 	}
 
 	set(name, value) {
