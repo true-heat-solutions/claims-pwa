@@ -38,6 +38,23 @@ async function getContractors(token) {
 	}
 }
 
+async function getLeads(token) {
+	const url = new URL('Lead/', ENDPOINT);
+	url.searchParams.set('token', token);
+	const resp = await fetch(url, {
+		mode: 'cors',
+		headers: new Headers({
+			Accept: 'application/json',
+		}),
+	});
+
+	if (resp.ok) {
+		return resp.json();
+	} else {
+		throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+	}
+}
+
 class ClaimPage extends HTMLElement {
 	constructor(uuid, mode = 'view') {
 		super();
@@ -151,16 +168,27 @@ class ClaimPage extends HTMLElement {
 			const html = await resp.text();
 			const doc = parser.parseFromString(html, 'text/html');
 			const frag = document.createDocumentFragment();
-			const contractors = await getContractors(localStorage.getItem('token'));
-			const opts = contractors.reduce((carry, item) => {
+			const [contractors, leads] = await Promise.all([
+				getContractors(localStorage.getItem('token')),
+				getLeads(localStorage.getItem('token')),
+			]);
+
+			const suggest = leads.map(lead => {
+				const opt = document.createElement('option');
+				opt.value = lead.name;
+				return opt;
+			});
+
+			doc.getElementById('leads-list').append(...suggest);
+
+			const opts = contractors.map(item => {
 				const opt = document.createElement('option');
 				opt.value = item.uuid;
 				opt.textContent = item.name;
-				carry.append(opt);
-				return carry;
-			}, document.createDocumentFragment());
+				return opt;
+			});
 
-			doc.querySelector('[name="contractor"]').append(opts);
+			doc.getElementById('claim-contractor').append(...opts);
 
 			doc.forms.claim.addEventListener('submit', async event => {
 				event.preventDefault();
