@@ -16,6 +16,7 @@ import '../components/pages/users.js';
 import '../components/pages/forgot-password.js';
 import '../components/pages/register.js';
 import '../components/pages/profile.js';
+import '../components/pages/contractors.js';
 import '../components/app-footer.js';
 import '../components/logout-button.js';
 import '../components/logo-img.js';

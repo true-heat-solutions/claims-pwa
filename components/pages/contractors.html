@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			@import url("/css/core-css/element.css");
+			@import url("/css/core-css/class-rules.css");
+			@import url("/css/styles/common.css");
+
+			:host {
+				display: block;
+			}
+
+			::slotted([slot="contractors"]) {
+				margin-top: 0.6rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container relative">
+			<header class="page-header">
+				<back-button class="float-left"></back-button>
+				<h3 class="center">Contractors</h3>
+			</header>
+			<dialog id="add-contrator-dialog">
+				<form name="addContractor">
+					<fieldset>
+						<legend class="center">Create Contractor</legend>
+						<label class="block">
+							<span>Name</span>
+							<input type="text" name="name" placeholder="Contractor name" required="" />
+						</label>
+					</fieldset>
+					<button type="submit" class="btn btn-accept">Submit</button>
+					<button type="reset" class="btn btn-reject">Reject</button>
+				</form>
+			</dialog>
+			<section class="page-body">
+				<slot name="contractors" class="block"></slot>
+			</section>
+			<button type="button" class="absolute btn btn-primary round shadow floating-btn" title="Add Contractor" id="add-contractor-btn" data-show-modal="#add-contractor-dialog">
+				<slot name="create-user-btn">
+					<svg class="current-color icon" viewBox="0 0 12 16">
+						<path fill-rule="evenodd" d="M12 9H7v5H5V9H0V7h5V2h2v5h5v2z"/>
+					</svg>
+				</slot>
+			</button>
+			<template id="contrator-template">
+				<div slot="contractors" class="card shadow clearfix" data-uuid="">
+					<span data-field="name"></span>
+					<button type="button" class="btn btn-reject float-right" data-click="delete">
+						<svg class="current-color icon float-right" viewBox="0 0 12 16">
+							<path fill-rule="evenodd" d="M11 2H9c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1H2c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1v9c0 .55.45 1 1 1h7c.55 0 1-.45 1-1V5c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1zm-1 12H3V5h1v8h1V5h1v8h1V5h1v8h1V5h1v9zm1-10H2V3h9v1z"/>
+						</svg>
+					</button>
+				</div>
+			</template>
+		</div>
+	</body>
+</html>

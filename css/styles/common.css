@@ -42,6 +42,15 @@ input[hidden]:checked + label[for].btn-toggle .when-unchecked {
 	border-radius: 13rem;
 }
 
+.btn.floating-btn {
+	position: absolute;
+	bottom: 1rem;
+	right: 1rem;
+	border-radius: 50%;
+	padding: 0.8rem;
+	font-size: 1.1rem;
+}
+
 .input-group {
 	padding: 0.2em;
 	margin: 0.3rem 1.2rem;

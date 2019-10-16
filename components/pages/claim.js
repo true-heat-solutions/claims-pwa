@@ -21,6 +21,23 @@ import '../claim-note.js';
 // 	}
 // }
 
+async function getContractors(token) {
+	const url = new URL('Contractors/', ENDPOINT);
+	url.searchParams.set('token', token);
+	const resp = await fetch(url, {
+		mode: 'cors',
+		headers: new Headers({
+			Accept: 'application/json',
+		}),
+	});
+
+	if (resp.ok) {
+		return resp.json();
+	} else {
+		throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+	}
+}
+
 class ClaimPage extends HTMLElement {
 	constructor(uuid, mode = 'view') {
 		super();
@@ -134,14 +151,16 @@ class ClaimPage extends HTMLElement {
 			const html = await resp.text();
 			const doc = parser.parseFromString(html, 'text/html');
 			const frag = document.createDocumentFragment();
-			// const users = await listUsers(localStorage.getItem('token'));
-			/*const opts = users.reduce((users, user) => {
+			const contractors = await getContractors(localStorage.getItem('token'));
+			const opts = contractors.reduce((carry, item) => {
 				const opt = document.createElement('option');
-				opt.value = user.person.identifier;
-				opt.textContent = user.person.name;
-				users.append(opt);
-				return users;
-			}, document.createDocumentFragment());*/
+				opt.value = item.uuid;
+				opt.textContent = item.name;
+				carry.append(opt);
+				return carry;
+			}, document.createDocumentFragment());
+
+			doc.querySelector('[name="contractor"]').append(opts);
 
 			doc.forms.claim.addEventListener('submit', async event => {
 				event.preventDefault();
