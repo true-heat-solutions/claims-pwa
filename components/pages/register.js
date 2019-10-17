@@ -1,4 +1,4 @@
-import {ENDPOINT} from '/js/consts.js';
+// import {ENDPOINT} from '/js/consts.js';
 import Router from '/js/Router.js';
 class RegisterPage extends HTMLElement {
 	constructor() {
