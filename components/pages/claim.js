@@ -3,7 +3,7 @@ import {ENDPOINT, ALLOWED_UPLOAD_TYPES} from '/js/consts.js';
 import {$} from '/js/std-js/functions.js';
 import '../attachment-el.js';
 import '../claim-note.js';
-import {getContractors, getLeads} from '/js/functions.js';
+import {getContractors, getLeads, userCan} from '/js/functions.js';
 
 class ClaimPage extends HTMLElement {
 	constructor(uuid, mode = 'view') {
@@ -114,6 +114,12 @@ class ClaimPage extends HTMLElement {
 			const parser = new DOMParser();
 			const html = await resp.text();
 			const doc = parser.parseFromString(html, 'text/html');
+
+			[...doc.querySelectorAll('[data-perms]')].forEach(el => {
+				const perms = el.dataset.perms.split(' ').map(p => p.trim());
+				el.hidden = ! userCan(...perms);
+			});
+
 			const frag = document.createDocumentFragment();
 			const [contractors, leads] = await Promise.all([
 				getContractors(localStorage.getItem('token')),
