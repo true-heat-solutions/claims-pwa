@@ -11,20 +11,34 @@
 				display: block;
 			}
 
+			* {
+				box-sizing: border-box;
+			}
+
+			.page-body > .card:not([hidden]) {
+				margin-top: 0.3rem;
+				width: 90%;
+				position: relative;
+				display: block;
+				left: 5%;
+			}
+
 			::slotted(.btn.btn-wide.note-btn) {
 				border-radius: 22px;
 				background-color: #b3b8ff;
 				color: #484848;
 			}
 
-			legend {
-				width: 100%;
-				padding: 0.3rem;
+			fieldset[disabled] {
+				display: none;
 			}
 
-			fieldset {
-				margin: 0;
-				padding: 0;
+			fieldset.card > legend {
+				transform: translateY(1rem);
+				display: block;
+				width: 100%;
+				font-weight: bold;
+				text-align: center;
 			}
 
 			label {
@@ -47,28 +61,47 @@
 	</head>
 	<body>
 		<div class="page-container">
-			<form name="claim">
-				<fieldset class="no-border">
-					<legend class="background-accent color-alt clearfix page-header">
-						<back-button class="float-left"></back-button>
-						<h3 class="center"><slot name="pageName">View Claim</slot></h3>
-					</legend>
-					<input type="hidden" name="uuid" />
-					<label class="block">
-						<span>Assigned To</span>
-						<br />
-						<select name="assigned" class="name">
-							<option value="">Pick User</option>
-							<option value="b40f4421-d529-43f2-904a-c8b6651d5488">Paul Duncan</option>
-							<option value="32f46809-d72a-4866-9015-03d25e26f990">Chris Zuber</option>
-						</select>
-					</label>
+			<header class="background-accent color-alt clearfix page-header">
+				<back-button class="float-left"></back-button>
+				<h3 class="center"><slot name="pageName">View Claim</slot></h3>
+			</header>
+			<form name="claim" class="page-body">
+				<schema-person hidden="" class="card shadow"></schema-person>
+				<fieldset id="customer-info" class="card shadow" hidden="" disabled="">
+					<legend class="center">Customer address</legend>
+					<br />
 					<label class="block">
 						<span>Customer Name</span>
 						<br />
 						<input type="text" name="customer[givenName]" />
 						<input type="text" name="customer[familyName]" />
 						<input type="hidden" name="customer[identifier]" />
+					</label>
+					<label class="block">
+						<span>Customer Phone Number</span>
+						<br />
+						<input type="tel" name="customer[telephone]" class="full-width" />
+					</label>
+					<label class="block">
+						<span>Address</span>
+						<input type="text" name="customer[address][streetAddress]" class="full-width inline-block" />
+						<br />
+						<input type="text" name="customer[address][addressLocality]" />
+						<input type="number" name="customer[address][postalCode]" min="10000" max="99999" class="zipcode" />
+						<input type="hidden" name="customer[address][addressRegion]" value="CA" />
+						<input type="hidden" name="customer[address][addressCountry]" value="US" />
+						<input type="hidden" name="customer[address][identifier]" />
+					</label>
+				</fieldset>
+				<fieldset class="card shadow">
+					<legend class="center">Claim Details</legend>
+					<input type="hidden" name="uuid" />
+					<label class="block">
+						<span>Assigned To</span>
+						<br />
+						<select name="assigned" class="name">
+							<option value="">Pick User</option>
+						</select>
 					</label>
 					<label class="block">
 						<span>Prime Contractor</span>
@@ -81,22 +114,6 @@
 						<span>Date of claim</span>
 						<br />
 						<input type="date" name="opened" class="full-width" />
-					</label>
-					<label class="block">
-						<span>Customer address</span>
-						<br />
-						<input type="text" name="customer[address][streetAddress]" class="full-width inline-block" />
-						<br />
-						<input type="text" name="customer[address][addressLocality]" />
-						<input type="number" name="customer[address][postalCode]" min="10000" max="99999" class="zipcode" />
-						<input type="hidden" name="customer[address][addressRegion]" value="CA" />
-						<input type="hidden" name="customer[address][addressCountry]" value="US" />
-						<input type="hidden" name="customer[address][identifier]" />
-					</label>
-					<label class="block">
-						<span>Customer Phone Number</span>
-						<br />
-						<input type="tel" name="customer[telephone]" class="full-width" />
 					</label>
 					<label class="block">
 						<span>Lead on Job</span>
@@ -113,34 +130,37 @@
 						<input type="number" name="price" value="0" min="0" step="0.01" required="" />
 					</label>
 					<br />
-					<section id="claim-notes" class="card shadow center">
-						<h3>Notes</h3>
-						<ul>
-							<slot name="notes"></slot>
-						</ul>
-						<button type="button" class="btn btn-accept btn-round btn-wide" data-click="new-note">
-							<slot name="new-note-label">New Note</slot>
-							<slot name="new-note-icon">
-								<svg class="current-color icon" viewBox="0 0 14 16">
-									<path fill-rule="evenodd" d="M3 10h4V9H3v1zm0-2h6V7H3v1zm0-2h8V5H3v1zm10 6H1V3h12v9zM1 2c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1H1z"/>
-								</svg>
-							</slot>
-						</button>
-					</section>
-					<section id="claim-attachments" class="card shadow">
-						<h3 class="center">Attachments</h3>
-						<slot name="attachments" class="block"></slot>
-						<div class="card shadow">
-							<input type="file" name="attachment" accept="image/*" />
-						</div>
-					</section>
 					<div class="center">
 						<button type="submit" class="btn btn-accept btn-round btn-wide"><slot name="btnLabel">Start</slot></button>
 					</div>
 				</fieldset>
+				<fieldset id="claim-attachments" class="card shadow" form="attachmentForm">
+					<legend class="center">Attachments</legend>
+					<slot name="attachments" class="block"></slot>
+					<br />
+					<input type="file" name="upload" accept="image/*" form="attachmentForm" />
+					<button type="submit" class="btn btn-primary" form="attachmentForm">
+						<span class="mobile-hidden">Upload</span>
+					</button>
+				</fieldset>
+				<fieldset id="claim-notes" class="card shadow center" form="newNoteForm">
+					<legend>Notes</legend>
+					<ul>
+						<slot name="notes"></slot>
+					</ul>
+					<button type="button" class="btn btn-accept btn-round btn-wide" data-click="new-note">
+						<slot name="new-note-label">New Note</slot>
+						<slot name="new-note-icon">
+							<svg class="current-color icon" viewBox="0 0 14 16">
+								<path fill-rule="evenodd" d="M3 10h4V9H3v1zm0-2h6V7H3v1zm0-2h8V5H3v1zm10 6H1V3h12v9zM1 2c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1H1z"/>
+							</svg>
+						</slot>
+					</button>
+				</fieldset>
 			</form>
+			<form name="attachmentForm" id="attachmentForm"></form>
 			<dialog id="new-note-dialog">
-				<form name="newNote">
+				<form name="newNoteForm">
 					<fieldset>
 						<legend class="center">New Note</legend>
 						<textarea name="text" placeholder="Note text" cols="80" rows="5" requierd=""></textarea>

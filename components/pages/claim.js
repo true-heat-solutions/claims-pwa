@@ -3,14 +3,26 @@ import {ENDPOINT, ALLOWED_UPLOAD_TYPES} from '/js/consts.js';
 import {$} from '/js/std-js/functions.js';
 import '../attachment-el.js';
 import '../claim-note.js';
+import '../schema-person.js';
+
 import {getContractors, getLeads, userCan} from '/js/functions.js';
 
+let viewMode = 'new';
+
 class ClaimPage extends HTMLElement {
-	constructor(uuid, mode = 'view') {
+	constructor(uuid = null, mode = 'view') {
 		super();
 		this.attachShadow({mode: 'open'});
 
+		if (typeof uuid === 'string') {
+			mode = uuid === 'new' ? 'new' : 'edit';
+		} else {
+			mode = 'new';
+		}
+		viewMode = mode;
+
 		if (typeof uuid === 'string' && uuid !== 'new') {
+			mode = 'edit';
 			const url = new URL('/Claim/', ENDPOINT);
 			url.searchParams.set('uuid', uuid);
 			url.searchParams.set('token', localStorage.getItem('token'));
@@ -27,19 +39,29 @@ class ClaimPage extends HTMLElement {
 						this.status = claim.status;
 						this.set('uuid', claim.uuid);
 						this.set('assigned', claim.assigned.uuid);
-						this.set('customer[identifier]', claim.customer.identifier);
-						this.set('customer[givenName]', claim.customer.givenName);
-						this.set('customer[familyName]', claim.customer.familyName);
-						this.set('customer[telephone]', claim.customer.telephone);
+						$('#customer-info').attr({
+							disabled: true,
+							hidden: true,
+						});
+						const person = this.shadowRoot.querySelector('schema-person');
+						await customElements.whenDefined('schema-person');
+						await new Promise(resolve => {
+							if (person.shadowRoot === null || person.shadowRoot.childElementCount === 0) {
+								person.addEventListener('ready', () => resolve(), {once: true});
+							} else {
+								resolve();
+							}
+						});
+						person.givenName = claim.customer.givenName;
+						person.familyName = claim.customer.familyName;
+						person.address = claim.customer.address;
+						person.telephone = claim.customer.telephone;
+						person.shadowRoot.getElementById('tel-container').hidden = false;
+						person.hidden = false;
+
+						this.set('opened', `${opened.getFullYear()}-${(opened.getMonth()+1).toString().padStart(2, '0')}-${opened.getDate().toString().padStart(2, '0')}`);
 						this.set('contractor', claim.contractor);
 						this.set('lead', claim.lead);
-						this.set('opened', `${opened.getFullYear()}-${(opened.getMonth()+1).toString().padStart(2, '0')}-${opened.getDate().toString().padStart(2, '0')}`);
-						this.set('customer[address][identifier]', claim.customer.address.identifier);
-						this.set('customer[address][streetAddress]', claim.customer.address.streetAddress);
-						this.set('customer[address][addressLocality]', claim.customer.address.addressLocality);
-						this.set('customer[address][addressRegion]', claim.customer.address.addressRegion);
-						this.set('customer[address][postalCode]', claim.customer.address.postalCode);
-						this.set('customer[address][addressCountry]', claim.customer.address.addressCountry);
 						this.set('price', claim.price || 0);
 						this.set('hours', claim.hours || 0);
 						if (Array.isArray(claim.attachments)) {
@@ -106,6 +128,15 @@ class ClaimPage extends HTMLElement {
 		} else if (uuid === 'new') {
 			this.ready.then(() => {
 				this.edit = true;
+				$('#customer-info', this.shadowRoot).attr({
+					disabled: false,
+					hidden: false,
+				});
+
+				$('fieldset[form]', this.shadowRoot).attr({
+					disabled: true,
+					hidden: true,
+				});
 				this.pageName = 'Create Claim';
 			});
 		}
@@ -167,7 +198,7 @@ class ClaimPage extends HTMLElement {
 				}
 			});
 
-			doc.forms.newNote.addEventListener('submit', async event => {
+			doc.forms.newNoteForm.addEventListener('submit', async event => {
 				event.preventDefault();
 				const {target} = event;
 				const data = new FormData(target);
@@ -193,10 +224,49 @@ class ClaimPage extends HTMLElement {
 				}
 			});
 
-			doc.forms.newNote.addEventListener('reset', event => {
+			doc.forms.newNoteForm.addEventListener('reset', event => {
 				const dialog = event.target.closest('dialog[open]');
 				if (dialog instanceof HTMLElement) {
 					dialog.close();
+				}
+			});
+
+			doc.forms.attachmentForm.addEventListener('submit', async event => {
+				event.preventDefault();
+				const {target} = event;
+				const data = new FormData(event.target);
+				data.set('token', localStorage.getItem('token'));
+
+				const req = fetch(new URL('upload/', ENDPOINT), {
+					method: 'POST',
+					mode: 'cors',
+					body: data,
+					headers: new Headers({
+						Accept: 'application/json',
+					}),
+				});
+
+				try {
+					const resp = await req;
+
+					if (resp.ok) {
+						target.reset();
+					} else {
+						if (resp.headers.get('Content-Type').startsWith('application/json')) {
+							const data = resp.json();
+							if (data.hasOwnProperty('error')) {
+								throw new Error(`${data.error.message} [${data.error.status}]`);
+							} else {
+								throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+							}
+						} else {
+							throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+						}
+					}
+				} catch(err) {
+					await customElements.whenDefined('toast-message');
+					const Toast = customElements.get('toast-message');
+					await Toast.toast(err.message);
 				}
 			});
 
@@ -216,44 +286,44 @@ class ClaimPage extends HTMLElement {
 			});
 
 			$('input[type="file"]', frag).attr({accept: ALLOWED_UPLOAD_TYPES.join(', ')});
-			$('input[type="file"]', frag).change(async event => {
-				if (event.target.files.length === 1) {
-					const file = event.target.files.item(0);
-					const url = new URL('upload/', ENDPOINT);
-					const body = new FormData();
-					body.set('token', localStorage.getItem('token'));
-					body.set('upload', file);
-					body.set('claim', this.get('uuid'));
-					const resp = await fetch(url, {
-						method: 'POST',
-						mode: 'cors',
-						body,
-					});
+			// $('input[type="file"]', frag).change(async event => {
+			// 	if (event.target.files.length === 1) {
+			// 		const file = event.target.files.item(0);
+			// 		const url = new URL('upload/', ENDPOINT);
+			// 		const body = new FormData();
+			// 		body.set('token', localStorage.getItem('token'));
+			// 		body.set('upload', file);
+			// 		body.set('claim', this.get('uuid'));
+			// 		const resp = await fetch(url, {
+			// 			method: 'POST',
+			// 			mode: 'cors',
+			// 			body,
+			// 		});
 
-					if (resp.ok) {
-						this.value = '';
-						const json = await resp.json();
-						console.log(json);
-						await customElements.whenDefined('attachment-el');
-						const HTMLAttachemntElement = customElements.get('attachment-el');
-						const attached  = new HTMLAttachemntElement();
-						await attached.ready;
-						attached.href = new URL(json.path, ENDPOINT);
-						attached.slot = 'attachments';
-						attached.mime = json.mime;
-						attached.uuid = json.uuid;
-						attached.name = json.path.split('/').pop();
+			// 		if (resp.ok) {
+			// 			this.value = '';
+			// 			const json = await resp.json();
+			// 			console.log(json);
+			// 			await customElements.whenDefined('attachment-el');
+			// 			const HTMLAttachemntElement = customElements.get('attachment-el');
+			// 			const attached  = new HTMLAttachemntElement();
+			// 			await attached.ready;
+			// 			attached.href = new URL(json.path, ENDPOINT);
+			// 			attached.slot = 'attachments';
+			// 			attached.mime = json.mime;
+			// 			attached.uuid = json.uuid;
+			// 			attached.name = json.path.split('/').pop();
 
-						console.log(json);
-						this.append(attached);
-					} else {
-						const json = await resp.json();
-						if (json.hasOwnProperty('error')) {
-							console.error(json.error);
-						}
-					}
-				}
-			});
+			// 			console.log(json);
+			// 			this.append(attached);
+			// 		} else {
+			// 			const json = await resp.json();
+			// 			if (json.hasOwnProperty('error')) {
+			// 				console.error(json.error);
+			// 			}
+			// 		}
+			// 	}
+			// });
 
 			this.shadowRoot.append(frag);
 			this.dispatchEvent(new Event('ready'));
@@ -271,11 +341,19 @@ class ClaimPage extends HTMLElement {
 	}
 
 	toJSON() {
-		return {
+		const data = {
 			token: localStorage.getItem('token'),
 			uuid: this.get('uuid'),
 			assigned: this.get('assigned'),
-			customer: {
+			contractor: this.get('contractor'),
+			lead: this.get('lead'),
+			opened: this.get('opened'),
+			hours: this.get('hours'),
+			price: this.get('price'),
+		};
+
+		if (viewMode === 'new') {
+			data.customer = {
 				identifier: this.get('customer[identifier]'),
 				givenName: this.get('customer[givenName]'),
 				familyName: this.get('customer[familyName]'),
@@ -288,13 +366,10 @@ class ClaimPage extends HTMLElement {
 					postalCode: this.get('customer[address][postalCode]'),
 					addressCountry: this.get('customer[address][addressCountry]'),
 				}
-			},
-			contractor: this.get('contractor'),
-			lead: this.get('lead'),
-			opened: this.get('opened'),
-			hours: this.get('hours'),
-			price: this.get('price'),
-		};
+			};
+		}
+
+		return data;
 	}
 
 	get(name) {

@@ -1,6 +1,6 @@
 /*eslint no-unused-vars: 0*/
 const config = {
-	version: '1.0.0-a95',
+	version: '1.0.0-a96',
 	stale: [
 		'/',
 		'/js/index.js',
@@ -19,6 +19,11 @@ const config = {
 		'/components/attachment-el.js',
 		'/components/attachment-el.html',
 		'/components/user-el.js',
+		'/components/schema.js',
+		'/components/schema-person.js',
+		'/components/schema-person.html',
+		'/components/schema-postal-address.js',
+		'/components/schema-postal-address.html',
 		'/components/user-el.html',
 		'/components/claim-note.js',
 		'/components/claim-note.html',
