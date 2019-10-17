@@ -1,3 +1,4 @@
+import {userCan} from '/js/functions.js';
 customElements.define('app-footer', class AppFooterElement extends HTMLElement {
 	constructor() {
 		super();
@@ -10,6 +11,11 @@ customElements.define('app-footer', class AppFooterElement extends HTMLElement {
 			const doc = parser.parseFromString(html, 'text/html');
 			const frag = document.createDocumentFragment();
 			frag.append(...doc.head.children, ...doc.body.children);
+
+			[...frag.querySelectorAll('[data-perms]')].forEach(el => {
+				const perms = el.dataset.perms.split(' ').map(p => p.trim());
+				el.hidden = ! userCan(...perms);
+			});
 
 			try {
 				const page = location.hash.split('/')[0];

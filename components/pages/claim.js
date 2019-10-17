@@ -3,57 +3,7 @@ import {ENDPOINT, ALLOWED_UPLOAD_TYPES} from '/js/consts.js';
 import {$} from '/js/std-js/functions.js';
 import '../attachment-el.js';
 import '../claim-note.js';
-
-// async function listUsers(token) {
-// 	const url = new URL('users/', ENDPOINT);
-// 	url.searchParams.set('token', token);
-// 	const resp = await fetch(url, {
-// 		mode: 'cors',
-// 		headers: new Headers({
-// 			Accept: 'application/json',
-// 		}),
-// 	});
-
-// 	if (resp.ok) {
-// 		return await resp.json();
-// 	} else {
-// 		throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
-// 	}
-// }
-
-async function getContractors(token) {
-	const url = new URL('Contractors/', ENDPOINT);
-	url.searchParams.set('token', token);
-	const resp = await fetch(url, {
-		mode: 'cors',
-		headers: new Headers({
-			Accept: 'application/json',
-		}),
-	});
-
-	if (resp.ok) {
-		return resp.json();
-	} else {
-		throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
-	}
-}
-
-async function getLeads(token) {
-	const url = new URL('Lead/', ENDPOINT);
-	url.searchParams.set('token', token);
-	const resp = await fetch(url, {
-		mode: 'cors',
-		headers: new Headers({
-			Accept: 'application/json',
-		}),
-	});
-
-	if (resp.ok) {
-		return resp.json();
-	} else {
-		throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
-	}
-}
+import {getContractors, getLeads} from '/js/functions.js';
 
 class ClaimPage extends HTMLElement {
 	constructor(uuid, mode = 'view') {
@@ -82,9 +32,6 @@ class ClaimPage extends HTMLElement {
 						this.set('customer[familyName]', claim.customer.familyName);
 						this.set('customer[telephone]', claim.customer.telephone);
 						this.set('contractor', claim.contractor);
-						// this.set('contractor[givenName]', claim.contractor.givenName);
-						// this.set('contractor[familyName]', claim.contractor.familyName);
-						// this.set('contractor[identifier]', claim.contractor.identifier);
 						this.set('lead', claim.lead);
 						this.set('opened', `${opened.getFullYear()}-${(opened.getMonth()+1).toString().padStart(2, '0')}-${opened.getDate().toString().padStart(2, '0')}`);
 						this.set('customer[address][identifier]', claim.customer.address.identifier);
@@ -250,8 +197,6 @@ class ClaimPage extends HTMLElement {
 			frag.append(...doc.head.children, ...doc.body.children);
 
 			frag.querySelector('.page-container').classList.toggle('no-dialog', document.createElement('dialog') instanceof HTMLUnknownElement);
-
-			// $('select.person', frag).each(sel => sel.append(opts.cloneNode(true)));
 
 			$('[data-click]', frag).click(async event => {
 				const target = event.target.closest('[data-click]');

@@ -1,6 +1,13 @@
 import Router from '/js/Router.js';
 // import {USERS} from '/users.js';
 import {ENDPOINT} from '/js/consts.js';
+const DATA = {
+	uuid: '',
+	name: '',
+	token: '',
+	permissions: [],
+};
+
 class LoginPage extends HTMLElement {
 	constructor(username = null, redirect = 'claims') {
 		super();
@@ -58,7 +65,6 @@ class LoginPage extends HTMLElement {
 			});
 
 			this.addEventListener('success', ({target, detail}) => {
-				console.info(detail);
 				target.form.querySelector('error-message').clear();
 				localStorage.setItem('identifier', detail.body.person.identifier);
 				localStorage.setItem('token', detail.body.token);
@@ -67,6 +73,9 @@ class LoginPage extends HTMLElement {
 				localStorage.setItem('familyName', detail.body.person.familyName);
 				localStorage.setItem('email', detail.body.person.email);
 				localStorage.setItem('telephone', detail.body.person.telephone);
+				this.permissions = Object.entries(detail.body.permissions)
+					.filter(([k, v]) => typeof k === 'string' && v === true)
+					.map(([k]) => k);
 
 				location.hash = this.redirect;
 			});
@@ -92,6 +101,19 @@ class LoginPage extends HTMLElement {
 
 	set username(username) {
 		this.shadowRoot.querySelector('[name="username"]').value = username;
+	}
+
+	get permissions() {
+		return DATA.permissions;
+	}
+
+	set permissions(perms) {
+		if (Array.isArray(perms)) {
+			DATA.permissions = perms;
+			localStorage.setItem('permissions', perms);
+		} else {
+			throw new Error('Permissions must be an array');
+		}
 	}
 
 	get form() {

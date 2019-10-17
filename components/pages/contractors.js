@@ -2,6 +2,7 @@ import Router from '/js/Router.js';
 import {$} from '/js/std-js/functions.js';
 import {confirm} from '/js/std-js/asyncDialog.js';
 import {ENDPOINT} from '/js/consts.js';
+import {userCan} from '/js/functions.js';
 
 class ContractorsPage extends HTMLElement {
 	constructor() {
@@ -12,6 +13,11 @@ class ContractorsPage extends HTMLElement {
 			const parser = new DOMParser();
 			const html = await resp.text();
 			const doc = parser.parseFromString(html, 'text/html');
+
+			[...doc.querySelectorAll('[data-perms]')].forEach(el => {
+				const perms = el.dataset.perms.split(' ').map(p => p.trim());
+				el.hidden = ! userCan(...perms);
+			});
 
 			doc.forms.addContractor.addEventListener('submit', async event => {
 				event.preventDefault();
@@ -75,6 +81,10 @@ class ContractorsPage extends HTMLElement {
 			const tmp = this.shadowRoot.getElementById('contrator-template').content;
 			const els = val.map(contractor => {
 				const el = tmp.cloneNode(true);
+				[...el.querySelectorAll('[data-perms]')].forEach(el => {
+					const perms = el.dataset.perms.split(' ').map(p => p.trim());
+					el.hidden = ! userCan(...perms);
+				});
 				$('[data-uuid]', el).data({uuid: contractor.uuid});
 				$('[data-field="name"]', el).text(contractor.name);
 				$('[data-click="delete"]', el).click(async event => {

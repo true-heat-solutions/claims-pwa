@@ -3,7 +3,7 @@ import '../user-el.js';
 import {ENDPOINT} from '/js/consts.js';
 import {$} from '/js/std-js/functions.js';
 import {alert} from '/js/std-js/asyncDialog.js';
-import {getRoles} from '/js/functions.js';
+import {getRoles, userCan} from '/js/functions.js';
 
 class UsersPage extends HTMLElement {
 	constructor() {
@@ -18,6 +18,11 @@ class UsersPage extends HTMLElement {
 			[...doc.body.children].forEach(el => el.classList.toggle('no-dialog', document.createElement('dialog') instanceof HTMLUnknownElement));
 			const frag = document.createDocumentFragment();
 			frag.append(...doc.head.children, ...doc.body.children);
+
+			[...frag.querySelectorAll('[data-perms]')].forEach(el => {
+				const perms = el.dataset.perms.split(' ').map(p => p.trim());
+				el.hidden = ! userCan(...perms);
+			});
 
 			const roles = await getRoles();
 			const roleOpts = roles.reduce((frag, role) => {

@@ -1,4 +1,6 @@
 import Router from '/js/Router.js';
+import {userCan} from '/js/functions.js';
+
 class AccountPage extends HTMLElement {
 	constructor() {
 		super();
@@ -11,6 +13,10 @@ class AccountPage extends HTMLElement {
 			const frag = document.createDocumentFragment();
 			frag.append(...doc.head.children, ...doc.body.children);
 
+			[...frag.querySelectorAll('[data-perms]')].forEach(el => {
+				const perms = el.dataset.perms.split(' ').map(p => p.trim());
+				el.hidden = ! userCan(...perms);
+			});
 			this.shadowRoot.append(frag);
 		});
 	}

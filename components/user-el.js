@@ -1,6 +1,7 @@
 import {ENDPOINT} from '/js/consts.js';
 import {confirm} from '/js/std-js/asyncDialog.js';
 import {$} from '/js/std-js/functions.js';
+import {userCan} from '/js/functions.js';
 class HTMLUserElement extends HTMLElement {
 	constructor() {
 		super();
@@ -12,6 +13,11 @@ class HTMLUserElement extends HTMLElement {
 			const doc = parser.parseFromString(html, 'text/html');
 			const frag = document.createDocumentFragment();
 			frag.append(...doc.head.children, ...doc.body.children);
+
+			[...frag.querySelectorAll('[data-perms]')].forEach(el => {
+				const perms = el.dataset.perms.split(' ').map(p => p.trim());
+				el.hidden = ! userCan(...perms);
+			});
 
 			$('[data-click="delete"]', frag).click(async () => {
 				if (await confirm(`Are you sure you want to delete "${this.get('name')}"?`)) {
