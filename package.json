@@ -2,7 +2,7 @@
   "name": "true-heat",
   "version": "1.0.0",
   "private": true,
-  "description": "A fairly bare-bones template repository",
+  "description": "PWA for True Heat Solutions Claims",
   "config": {
     "serve": {
       "domain": "localhost",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shgysk8zer0/true-heat.git"
+    "url": "git+https://github.com/true-heat-solutions/claims-pwa"
   },
   "keywords": [
     "static",
@@ -32,9 +32,9 @@
   "author": "Chris Zuber <shgysk8zer0@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/shgysk8zer0/true-heat/issues"
+    "url": "https://github.com/true-heat-solutions/claims-pwa/issues"
   },
-  "homepage": "https://github.com/shgysk8zer0/true-heat",
+  "homepage": "https://deploy-preview-3--competent-golick-08a09d.netlify.com/",
   "scripts": {
     "preinstall": "git submodule update --recursive --init",
     "start": "npm run netlify:serve",

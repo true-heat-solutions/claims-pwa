@@ -20,13 +20,17 @@
 				margin-bottom: 3rem;
 			}
 
+			form {
+				background-color: var(--primary-color, #fefefe);
+			}
+
 			#create-account {
 				bottom: 2.5rem;
 			}
 		</style>
 	</head>
 	<body>
-		<form name="login" class="relative center" action="https://api.kernvalley.us/login/" is="form-json" method="POST">
+		<form name="login" class="relative center z-2" action="https://api.kernvalley.us/login/" is="form-json" method="POST">
 			<logo-img></logo-img>
 			<error-message></error-message>
 			<div class="input-group">
@@ -48,7 +52,7 @@
 				</label>
 				<input type="password" name="password" id="login-password" class="input" placeholder="Password" autocomplete="current-password" required="" />
 			</div>
-			<div class="clearfix container">
+			<div class="clearfix container relative z-2">
 				<a href="#forgot-password" class="float-right color-default">Forgot password</a>
 			</div>
 			<button type="submit" class="btn btn-primary btn-wide btn-round">Login</button>
