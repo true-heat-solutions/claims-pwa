@@ -1,6 +1,6 @@
 /*eslint no-unused-vars: 0*/
 const config = {
-	version: '1.0.0-a96',
+	version: '1.0.0-a97',
 	stale: [
 		'/',
 		'/js/index.js',
