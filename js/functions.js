@@ -64,6 +64,23 @@ export async function getRoles() {
 	}
 }
 
+export async function getAssignees(token) {
+	const url = new URL('Assignees/', ENDPOINT);
+	url.searchParams.set('token', token);
+	const resp = await fetch(url, {
+		mode: 'cors',
+		headers: new Headers({
+			Accept: 'application/json',
+		}),
+	});
+
+	if (resp.ok) {
+		return resp.json();
+	} else {
+		throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+	}
+}
+
 export async function getContractors(token) {
 	const url = new URL('Contractors/', ENDPOINT);
 	url.searchParams.set('token', token);

@@ -4,7 +4,7 @@ import {$} from '/js/std-js/functions.js';
 import '../attachment-el.js';
 import '../claim-note.js';
 import '../schema-person.js';
-import {getContractors, getLeads, userCan, loggedIn, getToken} from '/js/functions.js';
+import {getContractors, getLeads, getAssignees, userCan, loggedIn, getToken} from '/js/functions.js';
 
 let viewMode = 'new';
 
@@ -22,7 +22,7 @@ class ClaimPage extends HTMLElement {
 
 		if (typeof uuid === 'string' && uuid !== 'new') {
 			mode = 'edit';
-			const url = new URL('/Claim/', ENDPOINT);
+			const url = new URL('Claim/', ENDPOINT);
 			url.searchParams.set('uuid', uuid);
 			url.searchParams.set('token',getToken());
 
@@ -151,9 +151,10 @@ class ClaimPage extends HTMLElement {
 			});
 
 			const frag = document.createDocumentFragment();
-			const [contractors, leads] = await Promise.all([
+			const [contractors, leads, assignees] = await Promise.all([
 				getContractors(getToken()),
 				getLeads(getToken()),
+				getAssignees(getToken()),
 			]);
 
 			const suggest = leads.map(lead => {
@@ -161,6 +162,15 @@ class ClaimPage extends HTMLElement {
 				opt.value = lead.name;
 				return opt;
 			});
+
+			const assign = assignees.map(person => {
+				const opt = document.createElement('option');
+				opt.value = person.uuid;
+				opt.textContent = person.name;
+				return opt;
+			});
+
+			doc.getElementById('assigned-user').append(...assign);
 
 			doc.getElementById('leads-list').append(...suggest);
 
@@ -175,7 +185,7 @@ class ClaimPage extends HTMLElement {
 
 			doc.forms.claim.addEventListener('submit', async event => {
 				event.preventDefault();
-				const resp = await fetch(new URL('/Claim/', ENDPOINT), {
+				const resp = await fetch(new URL('Claim/', ENDPOINT), {
 					mode: 'cors',
 					method: 'Post',
 					headers: new Headers({
