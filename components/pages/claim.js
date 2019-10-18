@@ -6,6 +6,19 @@ import '../claim-note.js';
 import '../schema-person.js';
 import {getContractors, getLeads, getAssignees, userCan, loggedIn, getToken} from '/js/functions.js';
 
+async function createAttachment(file) {
+	await customElements.whenDefined('attachment-el');
+	const HTMLAttachmentElement = customElements.get('attachment-el');
+	const attached = new HTMLAttachmentElement();
+	await attached.ready;
+	attached.href = new URL(file.path, ENDPOINT);
+	attached.slot = 'attachments';
+	attached.mime = file.mime;
+	attached.uuid = file.uuid;
+	attached.name = file.filename;
+	return attached;
+}
+
 let viewMode = 'new';
 
 class ClaimPage extends HTMLElement {
@@ -64,18 +77,8 @@ class ClaimPage extends HTMLElement {
 						this.set('price', claim.price || 0);
 						this.set('hours', claim.hours || 0);
 						if (Array.isArray(claim.attachments)) {
-							await customElements.whenDefined('attachment-el');
-							const HTMLAttachmentElement = customElements.get('attachment-el');
 							const attachments = await Promise.all(claim.attachments.map(async file => {
-								const attached = new HTMLAttachmentElement();
-								await attached.ready;
-								attached.href = new URL(file.path, ENDPOINT);
-								attached.slot = 'attachments';
-								attached.mime = file.mime;
-								attached.uuid = file.uuid;
-								attached.name = file.path.split('/').pop();
-								console.info(attached);
-								return attached;
+								return await createAttachment(file);
 							}));
 
 							this.append(...attachments);
@@ -245,6 +248,7 @@ class ClaimPage extends HTMLElement {
 				const {target} = event;
 				const data = new FormData(event.target);
 				data.set('token', getToken());
+				data.set('claim', this.get('uuid'));
 
 				const req = fetch(new URL('upload/', ENDPOINT), {
 					method: 'POST',
@@ -259,7 +263,11 @@ class ClaimPage extends HTMLElement {
 					const resp = await req;
 
 					if (resp.ok) {
+						const file = await resp.json();
 						target.reset();
+						const created = await createAttachment(file);
+						this.append(created);
+
 					} else {
 						if (resp.headers.get('Content-Type').startsWith('application/json')) {
 							const data = resp.json();
@@ -437,7 +445,7 @@ class ClaimPage extends HTMLElement {
 		return input instanceof HTMLInputElement ? input.value : null;
 	}
 
-	set prive(val) {
+	set price(val) {
 		const input = this.shadowRoot.querySelector('input[name="price"]');
 		if (input instanceof HTMLElement) {
 			input.value = val;

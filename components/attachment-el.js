@@ -58,10 +58,13 @@ class HTMLAttachmentElement extends HTMLElement {
 	}
 
 	set name(val) {
-		const el = document.createElement('span');
-		el.slot = 'name';
-		el.textContent = val;
-		this.append(el);
+		if ((typeof val === 'string') && val.length !== 0) {
+			const el = document.createElement('span');
+			this.shadowRoot.querySelector('.attachment-link').download = val;
+			el.slot = 'name';
+			el.textContent = val;
+			this.append(el);
+		}
 	}
 
 	get mime() {
