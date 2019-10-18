@@ -1,38 +1,72 @@
 import {ENDPOINT} from '/js/consts.js';
 import Router from '/js/Router.js';
-import {getRoles, loggedIn, getToken} from '/js/functions.js';
+import {$} from '/js/std-js/functions.js';
+import {getRoles, loggedIn, getToken, userCan} from '/js/functions.js';
 
 class ProfilePage extends HTMLElement {
 	constructor(uuid = null) {
 		super();
 		this.attachShadow({mode: 'open'});
 
+		if (typeof uuid === 'string' && uuid !== '') {
+			this.uuid = uuid;
+		} else {
+			this.uuid = localStorage.getItem('uuid');
+		}
+
 		fetch(new URL('profile.html', import.meta.url)).then(async resp => {
 			try {
 				const user = await ProfilePage.fetchUser({
 					token: getToken(),
-					uuid,
+					uuid: this.uuid,
 				});
+
 				const parser = new DOMParser();
 				const html = await resp.text();
 				const doc = parser.parseFromString(html, 'text/html');
 				const frag = document.createDocumentFragment();
-				const roles = await getRoles();
-				const roleSelect = doc.querySelector('[name="role"]');
 
-				roles.forEach(role => {
-					const opt = document.createElement('option');
-					opt.textContent = role.name;
-					opt.value = role.id;
-					roleSelect.append(opt);
-				});
+				if (this.uuid === localStorage.getItem('uuid')) {
+					// Editing own profile
+					$('#password-section', doc).attr({
+						hidden: false,
+						disabled: false,
+					});
+					$('#role-section', doc).attr({
+						hidden: true,
+						disabled: true,
+					});
+				} else {
+					// Editing other profile
+					$('#password-section', doc).attr({
+						hidden: true,
+						disabled: true,
+					});
+					$('#role-section', doc).attr({
+						hidden: false,
+						disabled: false,
+					});
+				}
 
-				roleSelect.value = user.roleId;
-				console.info(roles);
+				if (userCan('editUser')) {
+					const roles = await getRoles();
+					const roleSelect = doc.querySelector('[name="role"]');
+
+					roles.forEach(role => {
+						const opt = document.createElement('option');
+						opt.textContent = role.name;
+						opt.value = role.id;
+						roleSelect.append(opt);
+					});
+
+					roleSelect.value = user.roleId;
+					console.info(roles);
+				}
 
 				doc.forms.profile.addEventListener('submit', async event => {
+					// @TODO Check passwords (match on repeat, all not null)
 					event.preventDefault();
-					const resp = await fetch(new URL('/test/', ENDPOINT), {
+					const resp = await fetch(new URL('Profile/', ENDPOINT), {
 						method: 'POST',
 						mode: 'cors',
 						headers: new Headers({
@@ -74,7 +108,7 @@ class ProfilePage extends HTMLElement {
 
 	get(name) {
 		const input = this.shadowRoot.querySelector(`[name="${name}"]`);
-		return input instanceof HTMLElement ? input.value : null;
+		return input instanceof HTMLElement ? input.value || null : null;
 	}
 
 	set(name, value) {
@@ -82,6 +116,14 @@ class ProfilePage extends HTMLElement {
 		if (input instanceof HTMLElement) {
 			input.value = value;
 		}
+	}
+
+	get uuid() {
+		return this.getAttribute('uuid');
+	}
+
+	set uuid(val) {
+		this.setAttribute('uuid', val);
 	}
 
 	get role() {
@@ -95,19 +137,37 @@ class ProfilePage extends HTMLElement {
 	}
 
 	toJSON() {
-		return {
+		const data = {
 			token: getToken(),
+			uuid: this.uuid,
 			person: {
 				givenName: this.get('givenName'),
 				familyName: this.get('familyName'),
-				password: {
-					current: this.get('password[current]'),
-					'new': this.get('password[new]'),
-					repeat: this.get('password[repeat]'),
-				},
+				email: this.get('email'),
 				telephone: this.get('telephone'),
 			}
 		};
+
+		if (this.uuid === localStorage.getItem('uuid')) {
+			// Editing own profile
+			const password = {
+				'new': this.get('password[new]'),
+				current: this.get('password[current]'),
+				repeat: this.get('password[repeat]'),
+			};
+			if (password.new === password.repeat && password.new !== null && password.current !== null && password.current !== password.new) {
+				data.person.password = password;
+			}
+		} else {
+			data.person.role = this.get('role');
+			if (this.get('password[new]') !== '') {
+				data.person.password = {
+					'new': this.get('password[new]'),
+				};
+			}
+		}
+
+		return data;
 	}
 
 	static async fetchUser({token = getToken(), uuid = null} = {}) {

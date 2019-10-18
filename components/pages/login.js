@@ -68,6 +68,7 @@ class LoginPage extends HTMLElement {
 			this.addEventListener('success', ({target, detail}) => {
 				target.form.querySelector('error-message').clear();
 				localStorage.setItem('identifier', detail.body.person.identifier);
+				localStorage.setItem('uuid', detail.body.uuid);
 				localStorage.setItem('token', detail.body.token);
 				localStorage.setItem('givenName', detail.body.person.givenName);
 				localStorage.setItem('additionalName', detail.body.person.additionalName);
