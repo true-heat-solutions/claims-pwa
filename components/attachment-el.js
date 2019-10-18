@@ -1,5 +1,6 @@
 import {confirm, alert} from '/js/std-js/asyncDialog.js';
 import {ENDPOINT} from '/js/consts.js';
+import {getToken} from '/js/functions.js';
 class HTMLAttachmentElement extends HTMLElement {
 	constructor() {
 		super();
@@ -14,7 +15,7 @@ class HTMLAttachmentElement extends HTMLElement {
 			frag.querySelector('[data-click="delete"]').addEventListener('click', async () => {
 				if (await confirm('Delete this attachment?')) {
 					const url = new URL('upload/', ENDPOINT);
-					url.searchParams.set('token', localStorage.getItem('token'));
+					url.searchParams.set('token', getToken());
 					url.searchParams.set('uuid', this.uuid);
 					const resp = await fetch(url, {
 						method: 'DELETE',

@@ -1,4 +1,5 @@
 import {$} from '../js/std-js/functions.js';
+
 customElements.define('claim-note', class HTMLClaimNoteElement extends HTMLElement {
 	constructor() {
 		super();

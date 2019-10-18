@@ -1,5 +1,6 @@
 // import {ENDPOINT} from '/js/consts.js';
 import Router from '/js/Router.js';
+import {loggedIn} from '/js/functions.js';
 class RegisterPage extends HTMLElement {
 	constructor() {
 		super();
@@ -53,7 +54,7 @@ class RegisterPage extends HTMLElement {
 customElements.define('register-page', RegisterPage);
 
 Router.setRoute('register', async (...args) => {
-	if (localStorage.hasOwnProperty('token')) {
+	if (loggedIn()) {
 		location.href = '#claims';
 	} else {
 		const el = new RegisterPage(...args);

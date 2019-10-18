@@ -1,6 +1,6 @@
 import Router from '/js/Router.js';
 import {ENDPOINT} from '/js/consts.js';
-import {userCan} from '/js/functions.js';
+import {userCan, getToken, loggedIn} from '/js/functions.js';
 import '../claim-item.js';
 import './claim.js';
 
@@ -60,7 +60,7 @@ class ClaimsPage extends HTMLElement {
 	static get items() {
 		return new Promise(async (resolve, reject) => {
 			const url = new URL('./Claim/', ENDPOINT);
-			url.searchParams.set('token', localStorage.getItem('token'));
+			url.searchParams.set('token', getToken());
 
 			const resp = await fetch(url);
 			if (resp.ok) {
@@ -81,7 +81,7 @@ customElements.define('claims-page', ClaimsPage);
 Router.setRoute('claims', async uuid => {
 	if (! userCan('listClaims')) {
 		location.href = '#my-claims';
-	} else if (localStorage.hasOwnProperty('token')) {
+	} else if (loggedIn()) {
 		const el = new ClaimsPage(uuid);
 		console.log(uuid);
 		const app = document.body;
@@ -93,7 +93,7 @@ Router.setRoute('claims', async uuid => {
 });
 
 Router.setRoute('my-claims', async uuid => {
-	if (localStorage.hasOwnProperty('token')) {
+	if (loggedIn()) {
 		const el = new ClaimsPage(uuid);
 		console.log(uuid);
 		const app = document.body;

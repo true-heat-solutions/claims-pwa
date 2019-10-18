@@ -1,4 +1,5 @@
 import {ENDPOINT} from '/js/consts.js';
+import {getToken} from '/js/functions.js';
 
 customElements.define('user-select', class HTMLUserSelectElement extends HTMLElement {
 	constructor() {
@@ -8,7 +9,7 @@ customElements.define('user-select', class HTMLUserSelectElement extends HTMLEle
 
 	async connectedCallback() {
 		const url = new URL('users/', ENDPOINT);
-		url.searchParams.set('token', localStorage.getItem('token'));
+		url.searchParams.set('token', getToken());
 		const resp = await fetch(url, {
 			headers: new Headers({
 				Accept: 'application/json',

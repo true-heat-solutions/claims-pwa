@@ -1,5 +1,6 @@
 import {ENDPOINT} from '/js/consts.js';
 import Router from '/js/Router.js';
+import {loggedIn} from '/js/functions.js';
 
 class ForgotPasswordPage extends HTMLElement {
 	constructor() {
@@ -65,7 +66,7 @@ class ForgotPasswordPage extends HTMLElement {
 customElements.define('forgot-password-page', ForgotPasswordPage);
 
 Router.setRoute('forgot-password', async (...args) => {
-	if (localStorage.hasOwnProperty('token')) {
+	if (loggedIn()) {
 		location.href = '#claims';
 	} else {
 		const el = new ForgotPasswordPage(...args);

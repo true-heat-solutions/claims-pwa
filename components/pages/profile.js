@@ -1,6 +1,6 @@
 import {ENDPOINT} from '/js/consts.js';
 import Router from '/js/Router.js';
-import {getRoles} from '/js/functions.js';
+import {getRoles, loggedIn, getToken} from '/js/functions.js';
 
 class ProfilePage extends HTMLElement {
 	constructor(uuid = null) {
@@ -10,7 +10,7 @@ class ProfilePage extends HTMLElement {
 		fetch(new URL('profile.html', import.meta.url)).then(async resp => {
 			try {
 				const user = await ProfilePage.fetchUser({
-					token: localStorage.getItem('token'),
+					token: getToken(),
 					uuid,
 				});
 				const parser = new DOMParser();
@@ -96,7 +96,7 @@ class ProfilePage extends HTMLElement {
 
 	toJSON() {
 		return {
-			token: localStorage.getItem('token'),
+			token: getToken(),
 			person: {
 				givenName: this.get('givenName'),
 				familyName: this.get('familyName'),
@@ -110,7 +110,7 @@ class ProfilePage extends HTMLElement {
 		};
 	}
 
-	static async fetchUser({token = localStorage.getItem('token'), uuid = null} = {}) {
+	static async fetchUser({token = getToken(), uuid = null} = {}) {
 		const url = new URL('/user/', ENDPOINT);
 		url.searchParams.set('token', token);
 		if (typeof uuid === 'string' && uuid.length !== 0) {
@@ -136,7 +136,7 @@ class ProfilePage extends HTMLElement {
 customElements.define('profile-page', ProfilePage);
 
 Router.setRoute('profile', async (...args) => {
-	if (localStorage.hasOwnProperty('token')) {
+	if (loggedIn()) {
 		const el = new ProfilePage(...args);
 		const app = document.body;
 		[...app.children].forEach(el => el.remove());

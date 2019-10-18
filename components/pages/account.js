@@ -1,5 +1,5 @@
 import Router from '/js/Router.js';
-import {userCan} from '/js/functions.js';
+import {userCan, loggedIn} from '/js/functions.js';
 
 class AccountPage extends HTMLElement {
 	constructor() {
@@ -25,7 +25,7 @@ class AccountPage extends HTMLElement {
 customElements.define('account-page', AccountPage);
 
 Router.setRoute('account', async (...args) => {
-	if (localStorage.hasOwnProperty('token')) {
+	if (loggedIn()) {
 		const el = new AccountPage(...args);
 		const app = document.body;
 		[...app.children].forEach(el => el.remove());

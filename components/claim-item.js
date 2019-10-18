@@ -1,5 +1,6 @@
 import {confirm, alert} from '/js/std-js/asyncDialog.js';
 import {ENDPOINT} from '/js/consts.js';
+import {getToken} from '/js/functions.js';
 
 customElements.define('claim-item', class ClaimItemElement extends HTMLElement {
 	constructor() {
@@ -18,7 +19,7 @@ customElements.define('claim-item', class ClaimItemElement extends HTMLElement {
 				if (await confirm(`Are you sure you want to change the status to ${el.value}?`)) {
 					try {
 						const body = JSON.stringify({
-							token: localStorage.getItem('token'),
+							token: getToken(),
 							uuid: this.uuid,
 							status: this.status,
 						});

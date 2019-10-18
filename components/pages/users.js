@@ -3,7 +3,7 @@ import '../user-el.js';
 import {ENDPOINT} from '/js/consts.js';
 import {$} from '/js/std-js/functions.js';
 import {alert} from '/js/std-js/asyncDialog.js';
-import {getRoles, userCan} from '/js/functions.js';
+import {getRoles, userCan, loggedIn, getToken} from '/js/functions.js';
 
 class UsersPage extends HTMLElement {
 	constructor() {
@@ -42,7 +42,7 @@ class UsersPage extends HTMLElement {
 
 
 			$('.roles-select', frag).append(roleOpts);
-			$('[name="token"]', frag).attr({value: localStorage.getItem('token')});
+			$('[name="token"]', frag).attr({value: getToken()});
 
 			$('form[name="createUser"]', frag).submit(async event => {
 				event.preventDefault();
@@ -70,7 +70,7 @@ class UsersPage extends HTMLElement {
 
 			this.shadowRoot.append(frag);
 			const url = new URL('users/', ENDPOINT);
-			url.searchParams.set('token', localStorage.getItem('token'));
+			url.searchParams.set('token', getToken());
 			const userResp = await fetch(url, {mode: 'cors'});
 			const users = await userResp.json();
 			const list = this.shadowRoot.querySelector('ul');
@@ -100,7 +100,7 @@ class UsersPage extends HTMLElement {
 customElements.define('user-pages', UsersPage);
 
 Router.setRoute('users', async (...args) => {
-	if (localStorage.hasOwnProperty('token')) {
+	if (loggedIn()) {
 		const el = new UsersPage(...args);
 		const app = document.body;
 		[...app.children].forEach(el => el.remove());

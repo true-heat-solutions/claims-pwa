@@ -4,7 +4,7 @@ import {$} from '/js/std-js/functions.js';
 import '../attachment-el.js';
 import '../claim-note.js';
 import '../schema-person.js';
-import {getContractors, getLeads, userCan} from '/js/functions.js';
+import {getContractors, getLeads, userCan, loggedIn, getToken} from '/js/functions.js';
 
 let viewMode = 'new';
 
@@ -24,7 +24,7 @@ class ClaimPage extends HTMLElement {
 			mode = 'edit';
 			const url = new URL('/Claim/', ENDPOINT);
 			url.searchParams.set('uuid', uuid);
-			url.searchParams.set('token', localStorage.getItem('token'));
+			url.searchParams.set('token',getToken());
 
 			fetch(url, {
 				mode: 'cors',
@@ -152,8 +152,8 @@ class ClaimPage extends HTMLElement {
 
 			const frag = document.createDocumentFragment();
 			const [contractors, leads] = await Promise.all([
-				getContractors(localStorage.getItem('token')),
-				getLeads(localStorage.getItem('token')),
+				getContractors(getToken()),
+				getLeads(getToken()),
 			]);
 
 			const suggest = leads.map(lead => {
@@ -209,7 +209,7 @@ class ClaimPage extends HTMLElement {
 						'Content-Type': 'application/json',
 					}),
 					body: JSON.stringify({
-						token: localStorage.getItem('token'),
+						token: getToken(),
 						claim: this.get('uuid'),
 						text: data.get('text'),
 						status: this.status,
@@ -234,7 +234,7 @@ class ClaimPage extends HTMLElement {
 				event.preventDefault();
 				const {target} = event;
 				const data = new FormData(event.target);
-				data.set('token', localStorage.getItem('token'));
+				data.set('token', getToken());
 
 				const req = fetch(new URL('upload/', ENDPOINT), {
 					method: 'POST',
@@ -290,7 +290,7 @@ class ClaimPage extends HTMLElement {
 			// 		const file = event.target.files.item(0);
 			// 		const url = new URL('upload/', ENDPOINT);
 			// 		const body = new FormData();
-			// 		body.set('token', localStorage.getItem('token'));
+			// 		body.set('token', getToken());
 			// 		body.set('upload', file);
 			// 		body.set('claim', this.get('uuid'));
 			// 		const resp = await fetch(url, {
@@ -341,7 +341,7 @@ class ClaimPage extends HTMLElement {
 
 	toJSON() {
 		const data = {
-			token: localStorage.getItem('token'),
+			token: getToken(),
 			uuid: this.get('uuid'),
 			assigned: this.get('assigned'),
 			contractor: this.get('contractor'),
@@ -455,7 +455,7 @@ class ClaimPage extends HTMLElement {
 customElements.define('claim-page', ClaimPage);
 
 Router.setRoute('claim', async (...args) => {
-	if (localStorage.hasOwnProperty('token')) {
+	if (loggedIn()) {
 		const el = new ClaimPage(...args);
 		const app = document.body;
 		[...app.children].forEach(el => el.remove());

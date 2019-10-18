@@ -2,7 +2,7 @@ import Router from '/js/Router.js';
 import {$} from '/js/std-js/functions.js';
 import {confirm} from '/js/std-js/asyncDialog.js';
 import {ENDPOINT} from '/js/consts.js';
-import {userCan} from '/js/functions.js';
+import {userCan, loggedIn, getToken} from '/js/functions.js';
 
 class ContractorsPage extends HTMLElement {
 	constructor() {
@@ -32,7 +32,7 @@ class ContractorsPage extends HTMLElement {
 					}),
 					body: JSON.stringify({
 						name: data.get('name'),
-						token: localStorage.getItem('token'),
+						token: getToken(),
 					})
 				});
 
@@ -63,7 +63,7 @@ class ContractorsPage extends HTMLElement {
 
 			this.shadowRoot.append(frag);
 			const contr_url = new URL('Contractors/', ENDPOINT);
-			contr_url.searchParams.set('token', localStorage.getItem('token'));
+			contr_url.searchParams.set('token', getToken());
 
 			const contr_resp = await fetch(contr_url, {
 				mode: 'cors',
@@ -92,7 +92,7 @@ class ContractorsPage extends HTMLElement {
 
 					if (container instanceof HTMLElement && await confirm('Are you sure you wish to delete this contractor?')) {
 						const url = new URL('Contractors/', ENDPOINT);
-						url.searchParams.set('token', localStorage.getItem('token'));
+						url.searchParams.set('token', getToken());
 						url.searchParams.set('uuid', container.dataset.uuid);
 
 						const resp = await fetch(url, {
@@ -119,7 +119,7 @@ class ContractorsPage extends HTMLElement {
 customElements.define('contractors-page', ContractorsPage);
 
 Router.setRoute('contractors', async (...args) => {
-	if (localStorage.hasOwnProperty('token')) {
+	if (loggedIn()) {
 		const el = new ContractorsPage(...args);
 		const app = document.body;
 		[...app.children].forEach(el => el.remove());

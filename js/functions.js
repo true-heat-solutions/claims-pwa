@@ -1,4 +1,6 @@
 import {ENDPOINT} from './consts.js';
+const STORAGE = localStorage;
+
 export async function importHTML(src) {
 	const resp = await fetch(new URL(src, document.baseURI));
 	if (resp.ok) {
@@ -12,9 +14,39 @@ export async function importHTML(src) {
 	}
 }
 
-export function userCan(...req) {
-	const perms = localStorage.getItem('permissions').split(',');
-	return req.every(perm => perms.includes(perm));
+export function userCan(...perms) {
+	const allowed = getPermissions();
+	return perms.every(perm => allowed.includes(perm));
+}
+
+export function getToken() {
+	return STORAGE.getItem('token');
+}
+
+export function setToken(val) {
+	STORAGE.setItem('token', val);
+}
+
+export function getPermissions() {
+	const str = STORAGE.getItem('permissions') || '';
+	return str.split(',');
+}
+
+export function setPermissions(val) {
+	if (Array.isArray(val)) {
+		STORAGE.setItem('permissions', val.join(','));
+	} else if (typeof val === 'object') {
+		STORAGE.setItem('permissions', Object.entries(val)
+			.filter(([k, v]) => typeof k === 'string' && v === true)
+			.map(([k]) => k)
+			.join(','));
+	} else {
+		STORAGE.setItem('permissions', val);
+	}
+}
+
+export function loggedIn() {
+	return STORAGE.hasOwnProperty('token');
 }
 
 export async function getRoles() {

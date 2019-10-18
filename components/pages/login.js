@@ -1,6 +1,7 @@
 import Router from '/js/Router.js';
 // import {USERS} from '/users.js';
 import {ENDPOINT} from '/js/consts.js';
+import {loggedIn} from '/js/functions.js';
 const DATA = {
 	uuid: '',
 	name: '',
@@ -140,7 +141,7 @@ class LoginPage extends HTMLElement {
 customElements.define('login-page', LoginPage);
 
 Router.setRoute('login', async (username = null, redirect = 'claims') => {
-	if (localStorage.hasOwnProperty('token')) {
+	if (loggedIn()) {
 		location.href = `#${redirect}`;
 	} else {
 		const el = new LoginPage(username, redirect);
