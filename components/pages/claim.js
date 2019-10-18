@@ -4,7 +4,6 @@ import {$} from '/js/std-js/functions.js';
 import '../attachment-el.js';
 import '../claim-note.js';
 import '../schema-person.js';
-
 import {getContractors, getLeads, userCan} from '/js/functions.js';
 
 let viewMode = 'new';

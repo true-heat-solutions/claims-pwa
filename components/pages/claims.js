@@ -1,5 +1,6 @@
 import Router from '/js/Router.js';
 import {ENDPOINT} from '/js/consts.js';
+import {userCan} from '/js/functions.js';
 import '../claim-item.js';
 import './claim.js';
 
@@ -78,7 +79,9 @@ class ClaimsPage extends HTMLElement {
 customElements.define('claims-page', ClaimsPage);
 
 Router.setRoute('claims', async uuid => {
-	if (localStorage.hasOwnProperty('token')) {
+	if (! userCan('listClaims')) {
+		location.href = '#my-claims';
+	} else if (localStorage.hasOwnProperty('token')) {
 		const el = new ClaimsPage(uuid);
 		console.log(uuid);
 		const app = document.body;
