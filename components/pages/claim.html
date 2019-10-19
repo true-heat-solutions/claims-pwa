@@ -57,6 +57,16 @@
 			label > span {
 				color: #787878;
 			}
+
+			.error {
+				display: inline-block;
+				color: #b50d0a;
+				background-color: #fcdcdb;
+				padding: 0.35rem;
+				border-radius: 4px;
+				border: 1px solid currentColor;
+				margin: 0.5rem;
+			}
 		</style>
 	</head>
 	<body>
@@ -138,7 +148,7 @@
 					<legend class="center">Attachments</legend>
 					<slot name="attachments" class="block"></slot>
 					<br />
-					<input type="file" name="upload" accept="image/*" form="attachmentForm" required="" />
+					<input type="file" name="upload[]" id="uploads" accept="image/*" form="attachmentForm" required="" multiple="" />
 					<button type="submit" class="btn btn-primary" form="attachmentForm">
 						<span class="mobile-hidden">Upload</span>
 					</button>
@@ -168,6 +178,19 @@
 					<button type="submit" class="btn btn-accept">Submit</button>
 					<button type="reset" class="btn btn-reject">Reject</button>
 				</form>
+			</dialog>
+			<dialog id="upload-dialog">
+				<progress id="upload-progress" min="0" max="" value=""></progress>
+				<br />
+				<details id="upload-files">
+					<summary>Remaining Files</summary>
+					<ul id="upload-files-list"></ul>
+				</details>
+				<details id="upload-errors">
+					<summary>Errors</summary>
+					<ul id="upload-errors-list"></ul>
+				</details>
+				<button type="button" id="close-uploads-btn" class="btn bnt-primary" data-close="#upload-dialog">Close</button>
 			</dialog>
 		</div>
 	</body>

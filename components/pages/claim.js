@@ -6,6 +6,33 @@ import '../claim-note.js';
 import '../schema-person.js';
 import {getContractors, getLeads, getAssignees, userCan, loggedIn, getToken} from '/js/functions.js';
 
+export async function upload({file, token, claim}) {
+	const body = new FormData();
+	body.set('upload', file);
+	body.set('token', token);
+	body.set('claim', claim);
+
+	const resp = await fetch(new URL('upload/', ENDPOINT), {
+		method: 'POST',
+		mode: 'cors',
+		body,
+		headers: new Headers({
+			Accept: 'application/json',
+		}),
+	});
+
+	if (resp.ok) {
+		return await resp.json();
+	} else if(resp.headers.get('Content-Type').startsWith('application/json')) {
+		const err = await resp.json();
+		if ('error' in err) {
+			throw new Error(`${err.error.message} [${err.error.status}]`);
+		} else {
+			throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+		}
+	}
+}
+
 async function createAttachment(file) {
 	await customElements.whenDefined('attachment-el');
 	const HTMLAttachmentElement = customElements.get('attachment-el');
@@ -154,6 +181,12 @@ class ClaimPage extends HTMLElement {
 			});
 
 			const frag = document.createDocumentFragment();
+
+			$('[data-close]', doc).click(({target}) => {
+				const el = target.closest('[data-close]');
+				$(el.dataset.close, this.shadowRoot).close();
+			});
+
 			const [contractors, leads, assignees] = await Promise.all([
 				getContractors(getToken()),
 				getLeads(getToken()),
@@ -246,45 +279,80 @@ class ClaimPage extends HTMLElement {
 			doc.forms.attachmentForm.addEventListener('submit', async event => {
 				event.preventDefault();
 				const {target} = event;
-				const data = new FormData(event.target);
-				data.set('token', getToken());
-				data.set('claim', this.get('uuid'));
+				const input = this.shadowRoot.getElementById('uploads');
+				if (input.files.length > 0) {
+					const uploads = [...input.files];
+					const dialog = this.shadowRoot.getElementById('upload-dialog');
+					const errors = this.shadowRoot.getElementById('upload-errors-list');
+					const errsDetails = this.shadowRoot.getElementById('upload-errors');
+					const files = this.shadowRoot.getElementById('upload-files-list');
+					const progress = this.shadowRoot.getElementById('upload-progress');
+					const token = getToken();
+					const claim = this.get('uuid');
 
-				const req = fetch(new URL('upload/', ENDPOINT), {
-					method: 'POST',
-					mode: 'cors',
-					body: data,
-					headers: new Headers({
-						Accept: 'application/json',
-					}),
-				});
+					[...files.children].forEach(el => el.remove());
+					[...errors.children].forEach(el => el.remove());
 
-				try {
-					const resp = await req;
+					progress.value = 0;
+					progress.max = uploads.length;
 
-					if (resp.ok) {
-						const file = await resp.json();
-						target.reset();
-						const created = await createAttachment(file);
-						this.append(created);
+					uploads.forEach(file => {
+						const li = document.createElement('li');
+						li.textContent = file.name;
+						li.dataset.fileName = file.name;
+						files.append(li);
+					});
 
-					} else {
-						if (resp.headers.get('Content-Type').startsWith('application/json')) {
-							const data = resp.json();
-							if (data.hasOwnProperty('error')) {
-								throw new Error(`${data.error.message} [${data.error.status}]`);
+					dialog.showModal();
+
+					await Promise.all(uploads.map(async file => {
+						try {
+							const body = new FormData();
+							body.set('upload', file, file.name);
+							body.set('token', token);
+							body.set('claim', claim);
+							const resp = await fetch(new URL('upload/', ENDPOINT), {
+								method: 'POST',
+								mode: 'cors',
+								body,
+								headers: new Headers({
+									Accept: 'application/json',
+								}),
+							});
+
+							if (resp.ok) {
+								const uploaded = await resp.json();
+								const el = await createAttachment(uploaded);
+								this.append(el);
 							} else {
-								throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+								if (resp.headers.get('Content-Type').startsWith('application/json')) {
+									const data = await resp.json();
+									if (data.hasOwnProperty('error')) {
+										throw new Error(`${file.name}: ${data.error.message} [${data.error.code}]`);
+									} else {
+										throw new Error(`Error uploading ${file.name} [${resp.status} ${resp.statusText}]`);
+									}
+								} else {
+									throw new Error(`Error uploading ${file.name} [${resp.status} ${resp.statusText}]`);
+								}
 							}
-						} else {
-							throw new Error(`${resp.url} [${resp.status} ${resp.statusText}]`);
+						} catch (err) {
+							console.error(err);
+							const li = document.createElement('li');
+							li.classList.add('inline-block', 'error');
+							li.textContent = err.message;
+							errors.append(li);
+							errsDetails.open = true;
+						} finally {
+							progress.value++;
+							files.querySelector(`[data-file-name="${CSS.escape(file.name)}"]`).remove();
 						}
-					}
-				} catch(err) {
-					await customElements.whenDefined('toast-message');
-					const Toast = customElements.get('toast-message');
-					await Toast.toast(err.message);
+					}));
+
+					await new Promise(resolve => dialog.addEventListener('close', () => resolve(), {once: true}));
+					target.reset();
 				}
+
 			});
 
 			frag.append(...doc.head.children, ...doc.body.children);
