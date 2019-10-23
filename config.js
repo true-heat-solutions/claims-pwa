@@ -1,6 +1,6 @@
 /*eslint no-unused-vars: 0*/
 const config = {
-	version: '1.0.0-b10',
+	version: '1.0.0-b11',
 	stale: [
 		'/',
 		'/js/index.js',
@@ -42,6 +42,8 @@ const config = {
 		'/components/pages/users.html',
 		'/components/pages/profile.js',
 		'/components/pages/profile.html',
+		'/components/pages/config.js',
+		'/components/pages/config.html',
 		'/components/pages/contractors.js',
 		'/components/pages/contractors.html',
 		'/components/app-footer.js',

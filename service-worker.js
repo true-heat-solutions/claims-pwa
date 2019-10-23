@@ -1,6 +1,6 @@
 'use strict';
 /*eslint no-undef: 0*/
-/* 2019-10-23T14:31 */
+/* 2019-10-23T14:04 */
 self.importScripts('/config.js');
 
 self.addEventListener('install', async event => {
