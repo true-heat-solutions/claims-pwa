@@ -1,4 +1,4 @@
-import webShareApi from 'https://cdn.kernvalley.us/js/std-js/webShareApi.js';
+import webShareApi from '/js/std-js/webShareApi.js';
 import {
 	facebook,
 	twitter,

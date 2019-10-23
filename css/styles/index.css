@@ -1,29 +1,32 @@
 @charset "UTF-8";
 @import url("./vars.css");
-@import url("https://cdn.kernvalley.us/css/normalize.css/normalize.css");
-@import url("https://cdn.kernvalley.us/css/core-css/rem.css");
-@import url("https://cdn.kernvalley.us/css/core-css/viewport.css");
-@import url("https://cdn.kernvalley.us/css/core-css/element.css");
-@import url("https://cdn.kernvalley.us/css/core-css/class-rules.css");
-@import url("https://cdn.kernvalley.us/css/core-css/fonts.css");
-@import url("https://cdn.kernvalley.us/css/animate.css/animate.css");
-@import url("https://cdn.kernvalley.us/css/core-css/animations.css");
+@import url("/css/normalize/normalize.css");
+@import url("/css/core-css/rem.css");
+@import url("/css/core-css/viewport.css");
+@import url("/css/core-css/element.css");
+@import url("/css/core-css/class-rules.css");
+@import url("/css/core-css/fonts.css");
+@import url("/css/animate.css/animate.css");
+@import url("/css/core-css/animations.css");
 @import url("./layout.css");
+@import url("./common.css");
 
-input[hidden] + label[for].btn-toggle {
-	background-color: var(--button-disabled-background);
-	margin: 0.3rem;
-	transition: background-color 300ms ease-in-out;
+body > :first-child {
+	background-color: var(--primary-color);
+	height: 100vh;
+	overflow-y: auto;
+	animation: slideInUp 350ms ease-in-out;
 }
 
-input[hidden]:checked + label[for].btn-toggle {
-	background-color: var(--button-background);
-}
+@media(min-width: 800px) {
+	body {
+		background-color: #2b2b2b;
+	}
 
-input[hidden]:not(:checked) + label[for].btn-toggle .when-checked {
-	display: none;
-}
-
-input[hidden]:checked + label[for].btn-toggle .when-unchecked {
-	display: none;
+	body > :first-child {
+		max-width: 800px;
+		margin-left: calc(50vw - 400px);
+		border-radius: 12px;
+		min-height: 80vh;
+	}
 }

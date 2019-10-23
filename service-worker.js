@@ -1,73 +1,64 @@
 'use strict';
-// 2019-06-11 12:25
-const config = {
-	version: location.hostname === 'localhost' ? new Date().toISOString() : '1.0.0',
-	stale: [
-		'/',
-		'/js/index.js',
-		'/js/share-button.js',
-		'/js/share-config.js',
-		'/js/gravatar-img.js',
-		'/js/current-year.js',
-		'/js/imgur-img.js',
-		'/js/share-config.js',
-		'/css/styles/index.css',
-		'/css/styles/vars.css',
-		'/css/styles/layout.css',
-		'/css/styles/header.css',
-		'/css/styles/nav.css',
-		'/css/styles/main.css',
-		'/css/styles/sidebar.css',
-		'/css/styles/footer.css',
-		'/img/favicon.svg',
-		'/img/icons.svg',
-		'/img/apple-touch-icon.png',
-		'/img/logos/creative-common-by-sa.svg',
-		'/img/octicons/mail.svg',
-		'https://cdn.kernvalley.us/js/std-js/deprefixer.js',
-		'https://cdn.kernvalley.us/js/std-js/shims.js',
-		'https://cdn.kernvalley.us/js/std-js/md5.js',
-		'https://cdn.kernvalley.us/js/std-js/Notification.js',
-		'https://cdn.kernvalley.us/js/std-js/webShareApi.js',
-		'https://cdn.kernvalley.us/js/std-js/esQuery.js',
-		'https://cdn.kernvalley.us/js/std-js/functions.js',
-		'https://cdn.kernvalley.us/css/core-css/rem.css',
-		'https://cdn.kernvalley.us/css/core-css/viewport.css',
-		'https://cdn.kernvalley.us/css/core-css/element.css',
-		'https://cdn.kernvalley.us/css/core-css/class-rules.css',
-		'https://cdn.kernvalley.us/css/core-css/utility.css',
-		'https://cdn.kernvalley.us/css/core-css/fonts.css',
-		'https://cdn.kernvalley.us/css/core-css/animations.css',
-		'https://cdn.kernvalley.us/css/normalize.css/normalize.css',
-		'https://cdn.kernvalley.us/css/animate.css/animate.css',
-	].map(path => new URL(path, location.origin).href),
-};
+/*eslint no-undef: 0*/
+/* 2019-10-23T14:04 */
+self.importScripts('/config.js');
 
-self.addEventListener('install', async () => {
-	const cache = await caches.open(config.version);
-	const keys = await caches.keys();
-	const old = keys.filter(k => k !== config.version);
-	await Promise.all(old.map(key => caches.delete(key)));
+self.addEventListener('install', async event => {
+	event.waitUntil((async () => {
+		try {
+			for (const key of await caches.keys()) {
+				await caches.delete(key);
+			}
 
-	await cache.addAll(config.stale);
-	skipWaiting();
+			const cache = await caches.open(config.version);
+			await cache.addAll(config.stale);
+		} catch (err) {
+			console.error(err);
+		}
+	})());
 });
 
-self.addEventListener('activate', event => {
-	event.waitUntil(async function() {
-		clients.claim();
-	}());
-});
+self.addEventListener('activate', event => event.waitUntil(clients.claim()));
 
-self.addEventListener('fetch', async event => {
-	async function get(request) {
-		const cache = await caches.open(config.version);
-		const cached = await cache.match(request);
+self.addEventListener('fetch', event => {
+	if (event.request.method === 'GET' && event.request.url.startsWith(location.origin)) {
+		event.respondWith((async () => {
+			const url = new URL(event.request.url);
+			url.hash = '';
 
-		return cached instanceof Response ? cached : fetch(request);
-	}
+			if (Array.isArray(config.stale) && config.stale.includes(url.href)) {
+				const cached = await caches.match(url);
+				if (cached instanceof Response) {
+					return cached;
+				}
+			} else if (Array.isArray(config.fresh) && config.fresh.includes(url.href)) {
+				if (navigator.onLine) {
+					const resp = await fetch(url.href);
+					const cache = await caches.open(config.version);
 
-	if (event.request.method === 'GET' && config.stale.includes(event.request.url)) {
-		event.respondWith(get(event.request));
+					if (resp.ok) {
+						cache.add(resp.clone());
+					}
+					return resp;
+				} else {
+					return caches.match(event.request);
+				}
+			} else if (Array.isArray(config.allowed) && config.allowed.some(host => new URL(event.request.url).host === host)) {
+				const resp = await caches.match(event.request);
+				if (resp instanceof Response) {
+					return resp;
+				} else if (navigator.onLine) {
+					const resp = await fetch(event.request);
+					const cache = await caches.open(config.version);
+					cache.add(resp.clone());
+					return resp;
+				}
+			} else {
+				console.info(`Making request for ${event.request.url}`);
+				return fetch(event.request.url);
+			}
+		})());
 	}
 });
+
+self.addEventListener('error', console.error);

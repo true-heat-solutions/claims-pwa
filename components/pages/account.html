@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			@import url("/css/core-css/element.css");
+			@import url("/css/core-css/class-rules.css");
+			@import url("/css/styles/common.css");
+
+			:host {
+				display: block;
+			}
+
+			.item {
+				padding: 1.6rem 0.6rem;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="page-header">
+			<h3 class="center">More</h3>
+		</header>
+		<a href="#profile" class="block item clearfix">
+			<svg class="curent-color icon" viewBox="0 0 12 16">
+				<path fill-rule="evenodd" d="M12 14.002a.998.998 0 0 1-.998.998H1.001A1 1 0 0 1 0 13.999V13c0-2.633 4-4 4-4s.229-.409 0-1c-.841-.62-.944-1.59-1-4 .173-2.413 1.867-3 3-3s2.827.586 3 3c-.056 2.41-.159 3.38-1 4-.229.59 0 1 0 1s4 1.367 4 4v1.002z"/>
+			</svg>
+			<b>Profile</b>
+			<svg class="current-color icon float-right" viewBox="0 0 8 16">
+				<path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/>
+			</svg>
+			<hr />
+		</a>
+		<a href="#users" class="block item clearfix" data-perms="listUsers">
+			<svg class="current-color icon" viewBox="0 0 16 16">
+				<path fill-rule="evenodd" d="M16 12.999c0 .439-.45 1-1 1H7.995c-.539 0-.994-.447-.995-.999H1c-.54 0-1-.561-1-1 0-2.634 3-4 3-4s.229-.409 0-1c-.841-.621-1.058-.59-1-3 .058-2.419 1.367-3 2.5-3s2.442.58 2.5 3c.058 2.41-.159 2.379-1 3-.229.59 0 1 0 1s1.549.711 2.42 2.088C9.196 9.369 10 8.999 10 8.999s.229-.409 0-1c-.841-.62-1.058-.59-1-3 .058-2.419 1.367-3 2.5-3s2.437.581 2.495 3c.059 2.41-.158 2.38-1 3-.229.59 0 1 0 1s3.005 1.366 3.005 4z"/>
+			</svg>
+			<b>Users</b>
+			<svg class="current-color icon float-right" viewBox="0 0 8 16">
+				<path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/>
+			</svg>
+			<hr />
+		</a>
+		<a href="#contractors" class="block item clearfix" data-perms="listContractors">
+			<svg class="current-color icon" viewBox="0 0 14 16">
+				<path fill-rule="evenodd" d="M9 4V3c0-.55-.45-1-1-1H6c-.55 0-1 .45-1 1v1H1c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1H9zM6 3h2v1H6V3zm7 6H8v1H6V9H1V5h1v3h10V5h1v4z"/>
+			</svg>
+			<b>Contractors</b>
+			<svg class="current-color icon float-right" viewBox="0 0 8 16">
+				<path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/>
+			</svg>
+			<hr />
+		</a>
+		<a href="#config" class="block item clearfix" data-perms="config">
+			<svg class="curent-color icon" viewBox="0 0 16 16">
+				<path fill-rule="evenodd" d="M4 7H3V2h1v5zm-1 7h1v-3H3v3zm5 0h1V8H8v6zm5 0h1v-2h-1v2zm1-12h-1v6h1V2zM9 2H8v2h1V2zM5 8H2c-.55 0-1 .45-1 1s.45 1 1 1h3c.55 0 1-.45 1-1s-.45-1-1-1zm5-3H7c-.55 0-1 .45-1 1s.45 1 1 1h3c.55 0 1-.45 1-1s-.45-1-1-1zm5 4h-3c-.55 0-1 .45-1 1s.45 1 1 1h3c.55 0 1-.45 1-1s-.45-1-1-1z"/>
+			</svg>
+			<b>Settings</b>
+			<svg class="current-color icon float-right" viewBox="0 0 8 16">
+				<path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/>
+			</svg>
+			<hr />
+		</a>
+		<div class="center">
+			<logout-button role="button" class="btn btn-wide btn-round">Logout</logout-button>
+		</div>
+		<br />
+		<app-footer class="absolute bottom full-width"></app-footer>
+	</body>
+</html>

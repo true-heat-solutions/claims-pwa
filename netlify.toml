@@ -5,6 +5,8 @@
   command = "npm run build"
   [build.environment]
     GIT_LFS_ENABLED = "1"
+[dev]
+  targetPort = 8000
 [[headers]]
   for="/*"
   [headers.values]
@@ -21,10 +23,10 @@
     Content-Security-Policy = '''
       default-src 'self';
       base-uri 'self';
-      img-src 'self' https://secure.gravatar.com/avatar/ https://i.imgur.com/ https://cdn.kernvalley.us/;
-      script-src 'self' https://cdn.kernvalley.us/;
-      style-src 'self' https://cdn.kernvalley.us/;
-      connect-src 'self' https://api.kernvalley.us/ https://cdn.kernvalley.us/;
+      img-src *;
+      script-src 'self' https://cdn.kernvalley.us/ https://unpkg.com/@webcomponents/custom-elements@1.2.4/ https://cdn.polyfill.io/v2/;
+      style-src 'self' 'unsafe-inline' https://cdn.kernvalley.us/;
+      connect-src 'self' https://api.kernvalley.us/ https://cdn.kernvalley.us/ https://unpkg.com/@webcomponents/custom-elements@1.2.4/ https://cdn.polyfill.io/v2/ https://e8640586-0899-49fe-a622-4c98878f4c31.kernvalley.us;
       worker-src: 'self';
       font-src 'self' https://cdn.kernvalley.us/;
       media-src 'none';
@@ -36,6 +38,7 @@
       block-all-mixed-content;
       upgrade-insecure-requests;
       disown-opener;'''
+# @TODO ADD `report-uri` to CSP
 # [[redirects]]
   # from = ""
   # to = ""

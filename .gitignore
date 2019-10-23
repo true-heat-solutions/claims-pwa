@@ -1,5 +1,5 @@
 *.sql
-# /img/icons.svg
+/img/icons.svg
 *.min.*
 *.map
 ~*
@@ -66,3 +66,6 @@ typings/
 
 # next.js build output
 .next
+
+# Local Netlify folder
+.netlify

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			@import url("/css/core-css/element.css");
+			@import url("/css/core-css/class-rules.css");
+			@import url("/css/styles/common.css");
+
+			:host {
+				display: block;
+				padding: 0.2rem 1.2rem;
+			}
+
+			.grid {
+				grid-template-areas: "customer assigned ."
+					". . edit"
+					"date status .";
+				grid-template-columns: 5fr 3fr 3.2rem;
+				grid-template-rows: 2rem;
+			}
+
+			[name="status"] {
+				color: #e19862;
+				grid-area: status;
+				background: none;
+				border: none;
+				display: inline-block;
+				width: 12ch;
+				font-weight: bold;
+			}
+
+			#container[data-status="open"] [name="status"] {
+				color: #b9413a;
+			}
+
+			#container[data-status="closed"] [name="status"] {
+				color: #5c914f;
+			}
+
+			slot[name="customer"], ::slotted([slot="customer"]) {
+				grid-area: customer;
+			}
+
+			slot[name="assigned"] {
+				grid-area: assigned;
+			}
+
+			slot[name="date"], ::slotted([slot="date"]) {
+				grid-area: date;
+			}
+
+			slot[name="status"] {
+				color: #eea452;
+			}
+
+			slot[name="edit-btn"] {
+				grid-area: edit;
+				width: 1.1em;
+				height: 1.1em;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container" class="grid row no-wrap card">
+			<slot name="customer">Unknown Customer</slot>
+			<slot name="assigned">Unassigned</slot>
+			<slot name="edit-btn" class="inline-block edit-btn-container">
+				<svg id="edit-btn" class="current-color icon cursor-pointer" viewBox="0 0 8 16">
+					<path fill-rule="evenodd" d="M7.5 8l-5 5L1 11.5 4.75 8 1 4.5 2.5 3l5 5z"/>
+				</svg>
+			</slot>
+			<slot name="date">Invalid Date</slot>
+			<select name="status">
+				<option value="open">Open</option>
+				<option value="progress">In Progress</option>
+				<option value="closed">Closed</option>
+			</select>
+		</div>
+	</body>
+</html>

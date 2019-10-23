@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			:host {
+				display: block;
+			}
+
+			::slotted([slot="message"]) {
+				color: #f22323;
+			}
+		</style>
+	</head>
+	<body>
+		<slot name="message"></slot>
+	</body>
+</html>

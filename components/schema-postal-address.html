@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			:host {
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<address>
+			<div>
+				<slot name="streetAddress"></slot>
+			</div>
+			<div>
+				<slot name="addressLocality"></slot>,
+				<slot name="addressRegion"></slot>
+				<slot name="postalCode"></slot>
+			</div>
+		</address>
+	</body>
+</html>

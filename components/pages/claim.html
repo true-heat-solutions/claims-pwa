@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			@import url("/css/core-css/element.css");
+			@import url("/css/core-css/class-rules.css");
+			@import url("/css/styles/common.css");
+
+			:host {
+				display: block;
+			}
+
+			* {
+				box-sizing: border-box;
+			}
+
+			.page-body > .card:not([hidden]) {
+				margin-top: 0.3rem;
+				width: 90%;
+				position: relative;
+				display: block;
+				left: 5%;
+			}
+
+			::slotted(.btn.btn-wide.note-btn) {
+				border-radius: 22px;
+				background-color: #b3b8ff;
+				color: #484848;
+			}
+
+			fieldset[disabled] {
+				display: none;
+			}
+
+			fieldset.card > legend {
+				transform: translateY(1rem);
+				display: block;
+				width: 100%;
+				font-weight: bold;
+				text-align: center;
+			}
+
+			label {
+				margin: 0.4rem;
+			}
+
+			input, select {
+				border: 0;
+				border-bottom: 1px solid #787878;
+				padding: 0.3rem;
+				margin: 0.1rem;
+				font-weight: bold;
+				background: inherit;
+			}
+
+			label > span {
+				color: #787878;
+			}
+
+			.error {
+				display: inline-block;
+				color: #b50d0a;
+				background-color: #fcdcdb;
+				padding: 0.35rem;
+				border-radius: 4px;
+				border: 1px solid currentColor;
+				margin: 0.5rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<header class="background-accent color-alt clearfix page-header">
+				<back-button class="float-left"></back-button>
+				<h3 class="center"><slot name="pageName">View Claim</slot></h3>
+			</header>
+			<form name="claim" class="page-body">
+				<schema-person hidden="" class="card shadow"></schema-person>
+				<fieldset id="customer-info" class="card shadow" hidden="" disabled="">
+					<legend class="center">Customer address</legend>
+					<br />
+					<label class="block">
+						<span>Customer Name</span>
+						<br />
+						<input type="text" name="customer[givenName]" />
+						<input type="text" name="customer[familyName]" />
+						<input type="hidden" name="customer[identifier]" />
+					</label>
+					<label class="block">
+						<span>Customer Phone Number</span>
+						<br />
+						<input type="tel" name="customer[telephone]" class="full-width" />
+					</label>
+					<label class="block">
+						<span>Address</span>
+						<input type="text" name="customer[address][streetAddress]" class="full-width inline-block" />
+						<br />
+						<input type="text" name="customer[address][addressLocality]" />
+						<input type="number" name="customer[address][postalCode]" min="10000" max="99999" class="zipcode" />
+						<input type="hidden" name="customer[address][addressRegion]" value="CA" />
+						<input type="hidden" name="customer[address][addressCountry]" value="US" />
+						<input type="hidden" name="customer[address][identifier]" />
+					</label>
+				</fieldset>
+				<fieldset class="card shadow">
+					<legend class="center">Claim Details</legend>
+					<input type="hidden" name="uuid" />
+					<label class="block">
+						<span>Assigned To</span>
+						<br />
+						<select name="assigned" id="assigned-user" class="name">
+							<option value="">Pick User</option>
+						</select>
+					</label>
+					<label class="block">
+						<span>Prime Contractor</span>
+						<br />
+						<select class="person" name="contractor" id="claim-contractor">
+							<option value="">Select Contractor</option>
+						</select>
+					</label>
+					<label class="block">
+						<span>Date of claim</span>
+						<br />
+						<input type="date" name="opened" class="full-width" />
+					</label>
+					<label class="block">
+						<span>Lead on Job</span>
+						<br />
+						<input class="person" name="lead" list="leads-list" autocomplete="off" />
+						<datalist id="leads-list"></datalist>
+					</label>
+					<label class="block">
+						<span>Hours</span>
+						<input type="number" name="hours" value="0" min="0" step="0.25" required="" />
+					</label>
+					<label class="block">
+						<span>Price</span>
+						<input type="number" name="price" value="0" min="0" step="0.01" required="" />
+					</label>
+					<br />
+					<div class="center">
+						<button type="submit" class="btn btn-accept btn-round btn-wide"><slot name="btnLabel">Start</slot></button>
+					</div>
+				</fieldset>
+				<fieldset id="claim-attachments" class="card shadow" form="attachmentForm">
+					<legend class="center">Attachments</legend>
+					<slot name="attachments" class="block"></slot>
+					<br />
+					<input type="file" name="upload[]" id="uploads" accept="image/*" form="attachmentForm" required="" multiple="" />
+					<button type="submit" class="btn btn-primary" form="attachmentForm">
+						<span class="mobile-hidden">Upload</span>
+					</button>
+				</fieldset>
+				<fieldset id="claim-notes" class="card shadow center" form="newNoteForm">
+					<legend>Notes</legend>
+					<ul>
+						<slot name="notes"></slot>
+					</ul>
+					<button type="button" class="btn btn-accept btn-round btn-wide" data-click="new-note">
+						<slot name="new-note-label">New Note</slot>
+						<slot name="new-note-icon">
+							<svg class="current-color icon" viewBox="0 0 14 16">
+								<path fill-rule="evenodd" d="M3 10h4V9H3v1zm0-2h6V7H3v1zm0-2h8V5H3v1zm10 6H1V3h12v9zM1 2c-.55 0-1 .45-1 1v9c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1H1z"/>
+							</svg>
+						</slot>
+					</button>
+				</fieldset>
+			</form>
+			<form name="attachmentForm" id="attachmentForm"></form>
+			<dialog id="new-note-dialog">
+				<form name="newNoteForm">
+					<fieldset>
+						<legend class="center">New Note</legend>
+						<textarea name="text" placeholder="Note text" cols="80" rows="5" requierd=""></textarea>
+					</fieldset>
+					<button type="submit" class="btn btn-accept">Submit</button>
+					<button type="reset" class="btn btn-reject">Reject</button>
+				</form>
+			</dialog>
+			<dialog id="upload-dialog">
+				<progress id="upload-progress" min="0" max="" value=""></progress>
+				<br />
+				<details id="upload-files">
+					<summary>Remaining Files</summary>
+					<ul id="upload-files-list"></ul>
+				</details>
+				<details id="upload-errors">
+					<summary>Errors</summary>
+					<ul id="upload-errors-list"></ul>
+				</details>
+				<button type="button" id="close-uploads-btn" class="btn bnt-primary" data-close="#upload-dialog">Close</button>
+			</dialog>
+		</div>
+	</body>
+</html>
