@@ -17,34 +17,22 @@ import '../components/pages/forgot-password.js';
 import '../components/pages/register.js';
 import '../components/pages/profile.js';
 import '../components/pages/contractors.js';
+import '../components/pages/config.js';
 import '../components/app-footer.js';
 import '../components/logout-button.js';
 import '../components/logo-img.js';
 import '../components/back-button.js';
 import './routes.js';
 import {$, ready, registerServiceWorker} from './std-js/functions.js';
+document.documentElement.dataset.endpoint = ENDPOINT;
 
 if (! (Element.prototype.animate instanceof Function)) {
 	Element.prototype.animate = () => null;
 }
 
-if (! ('connection' in navigator)) {
-	navigator.connection = {
-		type: 'unknown',
-		effectiveType: '4g',
-		rtt: NaN,
-		downlink: NaN,
-		downlinkMax: Infinity,
-		saveData: false,
-		onchange: null,
-		ontypechange: null,
-		addEventListener: () => null,
-	};
-}
-
 function reportError({message, filename, colno, lineno}) {
 	const data = new FormData();
-	const url = new URL('/errors/', ENDPOINT);
+	const url = new URL('/Errors/', ENDPOINT);
 
 	data.set('message', message);
 	data.set('file', filename);

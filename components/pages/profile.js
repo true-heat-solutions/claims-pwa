@@ -75,20 +75,9 @@ class ProfilePage extends HTMLElement {
 						}),
 						body: JSON.stringify(this),
 					});
-					await customElements.whenDefined('toast-message');
-					const data = await resp.json();
-					const Toast = customElements.get('toast-message');
-					const toast = new Toast();
-					const pre = document.createElement('pre');
-					const code = document.createElement('code');
-					pre.slot = 'content';
-					code.textContent = JSON.stringify(data, null, 2);
-					pre.append(code);
-					toast.append(pre);
-					document.body.append(toast);
-					await toast.show();
-					await toast.closed;
-					toast.remove();
+					if (resp.ok) {
+						location.hash = '#account';
+					}
 				});
 
 				frag.append(...doc.head.children, ...doc.body.children);

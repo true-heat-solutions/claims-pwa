@@ -38,6 +38,7 @@
       block-all-mixed-content;
       upgrade-insecure-requests;
       disown-opener;'''
+# @TODO ADD `report-uri` to CSP
 # [[redirects]]
   # from = ""
   # to = ""

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<style>
+			@import url("/css/core-css/element.css");
+			@import url("/css/core-css/class-rules.css");
+			@import url("/css/styles/common.css");
+
+			:host {
+				display: block;
+			}
+
+			#host {
+				width: 19ch;
+			}
+
+			#port {
+				width: 12ch;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="page-container">
+			<header class="clearfix background-accent color-alt page-header">
+				<back-button class="float-left"></back-button>
+				<h3 class="center no-margins"><slot name="legend">Settings</slot></h3>
+			</header>
+			<section class="page-body">
+				<form name="email" class="center page-body">
+					<fieldset id="user-info" class="no-border">
+						<legend class="center">Email Setup</legend>
+						<div class="input-group">
+							<label for="username" class="block">
+								<svg class="current-color icon color-accent" viewBox="0 0 16 16">
+									<path d="M10.555 8.094C9.849 8.717 9.015 9 8 9c-1.016 0-1.853-.29-2.559-.914-1.109.363-2.436 1.288-2.437 2.902L3 14c0 .554.446 1 1 1h8c.554 0 1-.446 1-1v-3c0-1.387-1.102-2.556-2.445-2.906z"/>
+									<path d="M11 5a3 3 0 1 1-6 0 3 3 0 1 1 6 0z" overflow="visible"/>
+								</svg>
+								<input type="email" id="username" class="input" name="username" placeholder="user@example.com" autocomplete="email" required="" />
+							</label>
+						</div>
+						<div class="input-group">
+							<label for="password" class="block">
+								<svg class="current-color icon" viewBox="0 0 16 16">
+									<path d="M5 3C2.25 3 0 5.25 0 8s2.25 5 5 5c1.586 0 2.903-.845 3.813-2h5.593l.22-.75 1.03-4L15.97 5H8.813C7.903 3.845 6.586 3 5 3zm0 2c1.116 0 2.038.595 2.563 1.5l.312.5h5.531l-.53 2H7.874l-.312.5C7.038 10.405 6.116 11 5 11c-1.669 0-3-1.331-3-3s1.331-3 3-3z" overflow="visible"/>
+									<path d="M14.498 8H9l-.563 2H14z" opacity=".35" overflow="visible"/>
+									<path d="M5 8a1 1 0 1 1-2 0 1 1 0 1 1 2 0z" overflow="visible"/>
+								</svg>
+								<input type="password" id="password" class="input" name="password" placeholder="********" autocomplete="off" required="" />
+							</label>
+						</div>
+						<div class="input-group">
+							<label for="host" class="block">
+								<svg class="current-color icon" viewBox="0 0 12 16">
+									<path fill-rule="evenodd" d="M11 6H1c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V7c0-.55-.45-1-1-1zM2 9H1V7h1v2zm2 0H3V7h1v2zm2 0H5V7h1v2zm2 0H7V7h1v2zm3-8H1c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1zM2 4H1V2h1v2zm2 0H3V2h1v2zm2 0H5V2h1v2zm2 0H7V2h1v2zm3-1h-1V2h1v1zm0 8H1c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-2c0-.55-.45-1-1-1zm-9 3H1v-2h1v2zm2 0H3v-2h1v2zm2 0H5v-2h1v2zm2 0H7v-2h1v2z"/>
+								</svg>
+								<input type="text" id="host" class="input" name="host" placeholder="smtp.gmail.com" autocomplete="off" required="" />
+								<span>:</span>
+								<input type="number" class="input" name="port" id="port" min="100" max="999" placeholder="port" autocomplete="off" required="" />
+							</label>
+						</div>
+						<br />
+						<input type="checkbox" id="star-tls" name="starTLS" hidden="" />
+						<label for="star-tls" class="btn btn-toggle btn-wide">
+							<svg class="current-color icon" viewBox="0 0 16 16">
+								<path d="M7 2C5.355 2 4 3.355 4 5v2S3 7 3 8v5h10V8s0-1-1-1V5c0-1.645-1.355-3-3-3H7zm0 2h2c.571 0 1 .429 1 1v2H6V5c0-.571.429-1 1-1z" overflow="visible"/>
+							</svg>
+							<span>Use</span>
+							<span class="when-checked">Star TLS</span>
+							<span class="when-unchecked">TLS/SSL</span>
+							<svg class="icon when-checked" version="1" viewBox="0 0 16 16">
+								<path d="M3.469 1a2.468 2.468 0 0 0-2.47 2.469v9.062A2.468 2.468 0 0 0 3.47 15h9.062A2.468 2.468 0 0 0 15 12.531V3.47A2.468 2.468 0 0 0 12.53 1H3.47zm0 1h9.062C13.363 2 14 2.637 14 3.469v9.062c0 .832-.637 1.469-1.47 1.469H3.47A1.443 1.443 0 0 1 2 12.531V3.47C2 2.637 2.637 2 3.47 2z" overflow="visible"/>
+								<path d="M14.177 2.823L8.5 8.375 6.562 6.437 4.437 8.562l3 3L8.5 12.625l1.062-1.063 4.615-4.739z" overflow="visible"/>
+							</svg>
+							<svg class="icon when-unchecked" viewBox="0 0 16 16">
+								<path d="M3.437 1c-1.373 0-2.5 1.101-2.5 2.469v9.062C.937 13.9 2.064 15 3.437 15h9.125c1.373 0 2.5-1.101 2.5-2.469V3.47c0-1.37-1.127-2.47-2.5-2.47H3.437zm0 1h9.125c.844 0 1.5.64 1.5 1.469v9.062c0 .828-.656 1.469-1.5 1.469H3.437c-.843 0-1.5-.64-1.5-1.469V3.47c0-.828.657-1.469 1.5-1.469z" overflow="visible"/>
+							</svg>
+						</label>
+					</fieldset>
+					<button type="submit" class="btn btn-accept btn-wide btn-round">Submit</button>
+				</form>
+			</section>
+		</div>
+	</body>
+</html>
